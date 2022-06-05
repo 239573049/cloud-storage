@@ -38,6 +38,10 @@ steps:
       - docker stop token && docker rm token
       - docker run -d -p 8000:80 --name token token:latest
       
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
 ---
 kind: pipeline
 name: after
