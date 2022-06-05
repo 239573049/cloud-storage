@@ -26,7 +26,7 @@ public class GlobalResponseFilter : ActionFilterAttribute
                 {
                     context.Result = new JsonResult(new
                     {
-                        Code = objectResult.StatusCode,
+                        Code = objectResult.StatusCode.ToString(),
                         Data = new
                         {
 
@@ -39,7 +39,7 @@ public class GlobalResponseFilter : ActionFilterAttribute
                     var modelStateResult = objectResult.Value as ModelStateResult;
                     context.Result = new JsonResult(new
                     {
-                        Code = modelStateResult?.Code,
+                        Code = modelStateResult?.Code.ToString(),
                         Data = new
                         {
 
@@ -51,7 +51,7 @@ public class GlobalResponseFilter : ActionFilterAttribute
                 {
                     context.Result = new JsonResult(new
                     {
-                        Code = 200, Data = objectResult?.Value
+                        Code = 200.ToString(), Data = objectResult?.Value
                     });
                 }
             }
@@ -59,7 +59,7 @@ public class GlobalResponseFilter : ActionFilterAttribute
             {
                 context.Result = new JsonResult(new
                 {
-                    Code = 200,
+                    Code = 200.ToString(),
                     Data = new
                     {
 
@@ -71,7 +71,7 @@ public class GlobalResponseFilter : ActionFilterAttribute
                 ModelStateResult modelStateResult2 = context.Result as ModelStateResult;
                 context.Result = new JsonResult(new
                 {
-                    modelStateResult2?.Code,
+                    Code=modelStateResult2?.Code.ToString(),
                     Data = new
                     {
 
