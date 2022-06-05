@@ -1,0 +1,61 @@
+kind: pipeline
+name: token
+type: docker
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: token
+    when:
+      branch:
+        - master
+    image: docker:dind
+    environment:
+      IMAGE: token
+      ASPNETCORE_ENVIRONMENT: Development
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - docker build -f ./src/token.Web/Dockerfile -t token .
+      
+  - name: token-push
+    image: docker:dind
+    when:
+      branch:
+        - master
+    environment:
+      IMAGE: token
+      ASPNETCORE_ENVIRONMENT: Development
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+      - name: logs
+        path: /root/logs/token/logs:/app/logs
+    commands:
+      - docker stop token && docker rm token
+      - docker run -d -p 8000:80 --name token token:latest
+      
+---
+kind: pipeline
+name: after
+type: docker
+
+steps:
+  - name: notify
+    image: docker:dind
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - docker image prune -f
+      
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+
+depends_on:
+  - token
