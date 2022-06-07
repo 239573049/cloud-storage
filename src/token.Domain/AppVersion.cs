@@ -41,6 +41,7 @@ public class AppVersion:CreationAuditedEntity<Guid>,ISoftDelete
     /// </summary>
     public bool ForcedUpdating { get; set; }
     
+    /// <inheritdoc />
     public bool IsDeleted { get; set; }
     
 }

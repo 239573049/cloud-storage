@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using token.Domain.Shared;
 using token.HttpApi.filters;
 using Volo.Abp;
 using Volo.Abp.Modularity;
@@ -103,20 +104,20 @@ public class TokenHttpApiModule:AbpModule
                     ValidIssuer = tokenOptions.Issuer,    //签发者，签发的Token的人
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.SecretKey!))
                 };
-                // options.Events = new JwtBearerEvents
-                // {
-                //     OnMessageReceived = (context) =>
-                //     {
-                //         // 添加signalr的token 因为signalr的token在请求头上所以需要设置
-                //         var accessToken = context.Request.Query["access_token"];
-                //         var path = context.HttpContext.Request.Path;
-                //         if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments(HubConstants.Chat))
-                //         {
-                //             context.Token = accessToken;
-                //         }
-                //         return Task.CompletedTask;
-                //     }
-                // };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = (context) =>
+                    {
+                        // 添加signalr的token 因为signalr的token在请求头上所以需要设置
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments(SignalRConstants.Token))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
     }
 
@@ -155,7 +156,8 @@ public class TokenHttpApiModule:AbpModule
         app.UseStaticFiles();
         app.UseRouting();
         app.UseCors("CorsPolicy");
-
+        app.UseAuditing();
+        
         app.UseAuthentication();
         app.UseAuthorization();
 

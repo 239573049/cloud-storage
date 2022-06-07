@@ -2,36 +2,36 @@
 
 public class Constants
 {
-    public static string ClaimKey => "id";
+    public const string ClaimKey = "id";
 
-    public static string EntityKey => "Id";
-    public static string User => "user";
+    public const string EntityKey = "Id";
+    public const string User = "user";
 
-    public static string Role => "Role";
+    public const string Role = "Role";
 
-    public static string RowNoCn => "序号";
+    public const string RowNoCn = "序号";
 
-    public static string TenantHeader => "X-TenantId";
+    public const string TenantHeader = "X-TenantId";
 
-    public static string ClaimName => "Name";
+    public const string ClaimName = "Name";
 
-    public static string JwtHeader => "Authorization";
+    public const string JwtHeader = "Authorization";
 
-    public static string JwtType => "Bearer ";
+    public const string JwtType = "Bearer ";
 
-    public static string Permission => nameof(Permission);
+    public const string Permission = nameof(Permission);
 
-    public static string JsonType => "application/json";
+    public const string JsonType = "application/json";
 
-    public static string ModelStateResult => nameof(ModelStateResult);
+    public const string ModelStateResult = nameof(ModelStateResult);
 
-    public static string CorsPolicy => nameof(CorsPolicy);
-    public static string DefaultTodayDateFormat => "yyyy-MM-dd";
+    public const string CorsPolicy = nameof(CorsPolicy);
+    public const string DefaultTodayDateFormat = "yyyy-MM-dd";
 
-    public static string DefaultFullDateFormat => "yyyy-MM-dd HH:mm:ss";
+    public const string DefaultFullDateFormat = "yyyy-MM-dd HH:mm:ss";
 
-    public static string DefaultTodayDateStr => "yyyyMMdd";
+    public const string DefaultTodayDateStr = "yyyyMMdd";
 
-    public static string DefaultFullDateStr => "yyyyMMddHHmmss";
+    public const string DefaultFullDateStr = "yyyyMMddHHmmss";
 
 }

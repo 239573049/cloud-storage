@@ -21,7 +21,6 @@ public class TokenWebModule:AbpModule
     {
         var app = context.GetApplicationBuilder();
 
-        app.UseAuditing();
         app.UseUnitOfWork();
         app.UseConfiguredEndpoints();
 
