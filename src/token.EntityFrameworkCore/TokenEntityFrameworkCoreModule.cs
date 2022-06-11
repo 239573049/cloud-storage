@@ -12,16 +12,8 @@ public class TokenEntityFrameworkCoreModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddAbpDbContext<TokenDbContext>(options =>
-        {
-            options.AddDefaultRepositories(includeAllEntities: true);
-        });
+        context.Services.AddAbpDbContext<TokenDbContext>(options => { options.AddDefaultRepositories(true); });
 
-        Configure<AbpDbContextOptions>(options =>
-        {
-            options.UseMySQL();
-        });
-
+        Configure<AbpDbContextOptions>(options => { options.UseMySQL(); });
     }
-
 }

@@ -29,11 +29,21 @@ public class PrincipalAccessor : IPrincipalAccessor, ITransientDependency
 
     public Guid ID => Guid.Parse(GetClaimValueByType(Constants.ClaimKey).FirstOrDefault() ?? Guid.Empty.ToString());
 
-    public bool? IsAuthenticated() => _contextAccessor.HttpContext?.User.Identity?.IsAuthenticated;
+    public bool? IsAuthenticated()
+    {
+        return _contextAccessor.HttpContext?.User.Identity?.IsAuthenticated;
+    }
 
-    public string GetToken() => _contextAccessor.HttpContext?.Request.Headers[Constants.JwtHeader].ToString().Replace(Constants.JwtType, "") ?? string.Empty;
+    public string GetToken()
+    {
+        return _contextAccessor.HttpContext?.Request.Headers[Constants.JwtHeader].ToString()
+            .Replace(Constants.JwtType, "") ?? string.Empty;
+    }
 
-    public IEnumerable<Claim>? GetClaimsIdentity() => _contextAccessor.HttpContext?.User.Claims;
+    public IEnumerable<Claim>? GetClaimsIdentity()
+    {
+        return _contextAccessor.HttpContext?.User.Claims;
+    }
 
     public List<string>? GetClaimValueByType(string claimType)
     {
@@ -44,40 +54,44 @@ public class PrincipalAccessor : IPrincipalAccessor, ITransientDependency
     {
         var securityTokenHandler = new JwtSecurityTokenHandler();
         var token = GetToken();
-        return !string.IsNullOrEmpty(token) ? securityTokenHandler.ReadJwtToken(token).Claims.Where(item => item.Type == claimType).Select(item => item.Value).ToList() : new List<string>();
+        return !string.IsNullOrEmpty(token)
+            ? securityTokenHandler.ReadJwtToken(token).Claims.Where(item => item.Type == claimType)
+                .Select(item => item.Value).ToList()
+            : new List<string>();
     }
+
     public string GetUser(string token)
     {
         var securityTokenHandler = new JwtSecurityTokenHandler();
-        return securityTokenHandler.ReadJwtToken(token).Claims.Where(item => item.Type == Constants.User).Select(item => item.Value).FirstOrDefault() ?? "";
+        return securityTokenHandler.ReadJwtToken(token).Claims.Where(item => item.Type == Constants.User)
+            .Select(item => item.Value).FirstOrDefault() ?? "";
     }
 
     public string GetTenantId()
     {
         var httpContext = _contextAccessor.HttpContext;
-        return httpContext != null && httpContext.Request.Headers.ContainsKey(_xTenantId) ? ((IEnumerable<string>)(object)httpContext.Request.Headers[this._xTenantId]).FirstOrDefault() : null;
+        return httpContext != null && httpContext.Request.Headers.ContainsKey(_xTenantId)
+            ? ((IEnumerable<string>)httpContext.Request.Headers[_xTenantId]).FirstOrDefault()
+            : null;
     }
 
     public Guid UserId()
     {
         var user = ID;
-        if (user == Guid.Empty)
-        {
-            throw new BusinessException("401", "账号未授权");
-        }
+        if (user == Guid.Empty) throw new BusinessException("401", "账号未授权");
 
         return user;
     }
 
     public T GetUserInfo<T>()
     {
-        var result = GetClaimValueByType(Constants.User).FirstOrDefault() ?? throw new BusinessException("401", "账号未授权");
+        var result = GetClaimValueByType(Constants.User).FirstOrDefault() ??
+                     throw new BusinessException("401", "账号未授权");
         return JsonConvert.DeserializeObject<T>(result);
     }
 
     public Task<string> CreateTokenAsync<T>(T t)
     {
-
         var claims = new[]
         {
             new Claim(Constants.User, JsonConvert.SerializeObject(t))
@@ -88,11 +102,11 @@ public class PrincipalAccessor : IPrincipalAccessor, ITransientDependency
             SecurityAlgorithms.HmacSha256);
 
         var jwtSecurityToken = new JwtSecurityToken(
-            issuer: _tokenOptions.Issuer,                                 // 签发者
-            audience: _tokenOptions.Audience,                             // 接收者
-            claims: claims,                                               // payload
-            expires: DateTime.Now.AddMinutes(_tokenOptions.ExpireMinutes),// 过期时间
-            signingCredentials: cred);                                    // 令牌
+            _tokenOptions.Issuer, // 签发者
+            _tokenOptions.Audience, // 接收者
+            claims, // payload
+            expires: DateTime.Now.AddMinutes(_tokenOptions.ExpireMinutes), // 过期时间
+            signingCredentials: cred); // 令牌
         var token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
         return Task.FromResult(token);
     }

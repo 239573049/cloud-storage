@@ -4,7 +4,7 @@ using token.Domain;
 
 namespace token.Application.AutoMapper;
 
-public class TokenApplicationAutoMapperProfile:Profile
+public class TokenApplicationAutoMapperProfile : Profile
 {
     public TokenApplicationAutoMapperProfile()
     {

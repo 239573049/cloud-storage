@@ -5,16 +5,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using token.HttpApi.filters;
 using Volo.Abp;
 using Volo.Abp.Modularity;
 
 namespace token.HttpApi;
 
-public class TokenHttpApiModule:AbpModule
+public class TokenHttpApiModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
@@ -24,7 +24,7 @@ public class TokenHttpApiModule:AbpModule
         ConfigureSwaggerServices(context);
         ConfigurationMvc(context);
     }
-    
+
     private void ConfigurationMvc(ServiceConfigurationContext context)
     {
         context.Services.AddMvc(o =>
@@ -35,7 +35,7 @@ public class TokenHttpApiModule:AbpModule
             })
             .AddNewtonsoftJson(options =>
             {
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
             });
     }
@@ -44,12 +44,9 @@ public class TokenHttpApiModule:AbpModule
     {
         context.Services.AddSwaggerGen(o =>
         {
-            string[] files = Directory.GetFiles(AppContext.BaseDirectory, "*.xml");//获取api文档
-            string[] array = files;
-            foreach (string filePath in array)
-            {
-                o.IncludeXmlComments(filePath, includeControllerXmlComments: true);
-            }
+            var files = Directory.GetFiles(AppContext.BaseDirectory, "*.xml"); //获取api文档
+            var array = files;
+            foreach (var filePath in array) o.IncludeXmlComments(filePath, true);
             o.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "token API", Version = "v1"
@@ -71,20 +68,20 @@ public class TokenHttpApiModule:AbpModule
             });
             o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description = "请输入文字“Bearer”，后跟空格和JWT值，格式  : Bearer {token}", Name = "Authorization", In = ParameterLocation.Header, Type = SecuritySchemeType.ApiKey
+                Description = "请输入文字“Bearer”，后跟空格和JWT值，格式  : Bearer {token}", Name = "Authorization",
+                In = ParameterLocation.Header, Type = SecuritySchemeType.ApiKey
             });
         });
     }
 
     private static void ConfigureRedis(ServiceConfigurationContext context)
     {
-        var configuration = context.Services.GetConfiguration()["Redis:Configuration"];
-        RedisHelper.Initialization(new CSRedis.CSRedisClient(configuration));
+        // var configuration = context.Services.GetConfiguration()["Redis:Configuration"];
+        // RedisHelper.Initialization(new CSRedis.CSRedisClient(configuration));
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
     {
-
         var configurationSection = configuration.GetSection(nameof(TokenOptions));
         var tokenOptions = configurationSection.Get<TokenOptions>();
         if (string.IsNullOrEmpty(tokenOptions.Issuer))
@@ -95,12 +92,12 @@ public class TokenHttpApiModule:AbpModule
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,                //是否在令牌期间验证签发者
-                    ValidateAudience = true,              //是否验证接收者
-                    ValidateLifetime = true,              //是否验证失效时间
-                    ValidateIssuerSigningKey = true,      //是否验证签名
-                    ValidAudience = tokenOptions.Audience,//接收者
-                    ValidIssuer = tokenOptions.Issuer,    //签发者，签发的Token的人
+                    ValidateIssuer = true, //是否在令牌期间验证签发者
+                    ValidateAudience = true, //是否验证接收者
+                    ValidateLifetime = true, //是否验证失效时间
+                    ValidateIssuerSigningKey = true, //是否验证签名
+                    ValidAudience = tokenOptions.Audience, //接收者
+                    ValidIssuer = tokenOptions.Issuer, //签发者，签发的Token的人
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.SecretKey!))
                 };
                 // options.Events = new JwtBearerEvents
@@ -126,7 +123,7 @@ public class TokenHttpApiModule:AbpModule
         {
             options.AddPolicy("CorsPolicy", builder =>
             {
-                builder.SetIsOriginAllowed((string _) => true)
+                builder.SetIsOriginAllowed(_ => true)
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();
@@ -158,6 +155,5 @@ public class TokenHttpApiModule:AbpModule
 
         app.UseAuthentication();
         app.UseAuthorization();
-
     }
 }

@@ -2,6 +2,6 @@
 
 namespace token.Application.Contracts;
 
-public class TokenApplicationContractsModule:AbpModule
+public class TokenApplicationContractsModule : AbpModule
 {
 }

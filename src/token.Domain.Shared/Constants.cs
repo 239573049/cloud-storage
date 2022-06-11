@@ -33,5 +33,4 @@ public class Constants
     public static string DefaultTodayDateStr => "yyyyMMdd";
 
     public static string DefaultFullDateStr => "yyyyMMddHHmmss";
-
 }

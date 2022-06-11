@@ -19,8 +19,7 @@ public class TokenDbContextFactory : IDesignTimeDbContextFactory<TokenDbContext>
     private static IConfigurationRoot BuildConfiguration()
     {
         var builder = new ConfigurationBuilder()
-            //.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../GoYes.DbMigrator/"))
-            .AddJsonFile("appsettings.json", optional: false);
+            .AddJsonFile("appsettings.json", false);
 
         return builder.Build();
     }

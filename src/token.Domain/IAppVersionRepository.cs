@@ -2,7 +2,6 @@
 
 namespace token.Domain;
 
-public interface IAppVersionRepository:IRepository<AppVersion,Guid>
+public interface IAppVersionRepository : IRepository<AppVersion, Guid>
 {
-    
 }

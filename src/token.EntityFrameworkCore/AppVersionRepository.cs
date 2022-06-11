@@ -4,11 +4,9 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace token.EntityFrameworkCore;
 
-public class AppVersionRepository:EfCoreRepository<TokenDbContext,AppVersion,Guid>, IAppVersionRepository
+public class AppVersionRepository : EfCoreRepository<TokenDbContext, AppVersion, Guid>, IAppVersionRepository
 {
     public AppVersionRepository(IDbContextProvider<TokenDbContext> dbContextProvider) : base(dbContextProvider)
     {
     }
-    
-    
 }

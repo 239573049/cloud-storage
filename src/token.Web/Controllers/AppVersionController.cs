@@ -4,20 +4,22 @@ using token.Application.Contracts.Version;
 namespace token.Controllers;
 
 /// <summary>
-/// 版本模块
+///     版本模块
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
-public class AppVersionController:ControllerBase
+public class AppVersionController : ControllerBase
 {
     private readonly IAppVersionAppService _appVersionAppService;
+
+    /// <inheritdoc />
     public AppVersionController(IAppVersionAppService appVersionAppService)
     {
         _appVersionAppService = appVersionAppService;
     }
 
     /// <summary>
-    /// 创建程序版本信息
+    ///     创建程序版本信息
     /// </summary>
     /// <param name="dto"></param>
     [HttpPost("app-version")]
@@ -25,9 +27,9 @@ public class AppVersionController:ControllerBase
     {
         await _appVersionAppService.CreateAppVersionAsync(dto);
     }
-    
+
     /// <summary>
-    /// 获取程序版本信息列表
+    ///     获取程序版本信息列表
     /// </summary>
     /// <param name="keyword"></param>
     /// <returns></returns>
@@ -36,9 +38,9 @@ public class AppVersionController:ControllerBase
     {
         return await _appVersionAppService.GetAppVersionListAsync(keyword);
     }
-    
+
     /// <summary>
-    /// 通过编号获取产品版本信息
+    ///     通过编号获取产品版本信息
     /// </summary>
     /// <param name="code"></param>
     /// <returns></returns>
@@ -49,7 +51,7 @@ public class AppVersionController:ControllerBase
     }
 
     /// <summary>
-    /// 编辑产品版本信息
+    ///     编辑产品版本信息
     /// </summary>
     /// <param name="dto"></param>
     [HttpPut("app-version")]
