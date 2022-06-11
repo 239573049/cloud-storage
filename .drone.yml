@@ -42,6 +42,7 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
+      
 ---
 kind: pipeline
 name: after
@@ -54,7 +55,7 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - docker image prune -f
+      - docker  system -f
       
 volumes:
   - name: dockersock
