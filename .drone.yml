@@ -19,7 +19,7 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - docker build -f ./src/token.Web/Dockerfile -t token .
+      - docker build -f ./src/token.Web/Dockerfile  -t token .
       
   - name: token-push
     image: docker:dind
@@ -36,7 +36,7 @@ steps:
         path: /root/logs/token/logs:/app/logs
     commands:
       - docker stop token && docker rm token
-      - docker run -d -p 8000:80 --name token token:latest
+      - docker run -d -p 8000:80 --restart always --name token token:latest
       
 volumes:
   - name: dockersock
