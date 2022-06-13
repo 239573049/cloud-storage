@@ -7,7 +7,7 @@ namespace token.Controllers;
 /// <summary>
 /// Pdf服务
 /// </summary>
-[Route("api/[controller]")]
+[Route("api/pdf")]
 [ApiController]
 public class PdfController:ControllerBase
 {

@@ -11,16 +11,17 @@ public class TokenDbContext : AbpDbContext<TokenDbContext>
     public TokenDbContext(DbContextOptions<TokenDbContext> options) : base(options)
     {
     }
-    
+
     /// <summary>
-    /// 版本
+    ///     版本
     /// </summary>
     public DbSet<AppVersion> AppVersion { get; set; }
-    
+
     /// <summary>
-    /// 用户
+    ///     用户
     /// </summary>
     public DbSet<Users> Users { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // 只禁用查询跟踪

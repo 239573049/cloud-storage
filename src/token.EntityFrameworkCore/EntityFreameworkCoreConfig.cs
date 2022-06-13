@@ -19,8 +19,6 @@ public static class EntityFreameworkCoreConfig
             x.ToTable("AppVersion");
             x.HasIndex(x => x.Id);
             x.HasKey(x => x.Id);
-
         });
-        
     }
 }

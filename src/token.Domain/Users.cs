@@ -29,9 +29,9 @@ public class Users : CreationAuditedEntity<Guid>, ISoftDelete
     public string? Name { get; set; }
 
     /// <summary>
-    /// 头像
+    ///     头像
     /// </summary>
     public string? HeadPortrait { get; set; }
-    
+
     public bool IsDeleted { get; set; }
 }

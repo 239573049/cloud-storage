@@ -71,7 +71,7 @@ public class PrincipalAccessor : IPrincipalAccessor, ITransientDependency
     {
         var httpContext = _contextAccessor.HttpContext;
         return httpContext != null && httpContext.Request.Headers.ContainsKey(_xTenantId)
-            ? ((IEnumerable<string>)httpContext.Request.Headers[_xTenantId]).FirstOrDefault()
+            ? httpContext.Request.Headers[_xTenantId].FirstOrDefault()
             : null;
     }
 

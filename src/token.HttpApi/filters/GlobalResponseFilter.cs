@@ -37,7 +37,7 @@ public class GlobalResponseFilter : ActionFilterAttribute
                     var modelStateResult = objectResult.Value as ModelStateResult;
                     context.Result = new JsonResult(new
                     {
-                        Code = modelStateResult?.Code,
+                        modelStateResult?.Code,
                         Data = new
                         {
                         },
@@ -67,7 +67,7 @@ public class GlobalResponseFilter : ActionFilterAttribute
                 var modelStateResult2 = context.Result as ModelStateResult;
                 context.Result = new JsonResult(new
                 {
-                    Code = modelStateResult2?.Code,
+                    modelStateResult2?.Code,
                     Data = new
                     {
                     },
