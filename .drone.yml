@@ -55,7 +55,7 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - docker  system -f
+      - docker system prune -f
       
 volumes:
   - name: dockersock
