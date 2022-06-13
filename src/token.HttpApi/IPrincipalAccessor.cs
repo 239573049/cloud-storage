@@ -5,9 +5,9 @@ namespace token.HttpApi;
 public interface IPrincipalAccessor
 {
     string Name { get; }
-    string GetUser(string token);
 
     Guid ID { get; }
+    string GetUser(string token);
 
     bool? IsAuthenticated();
 
@@ -20,7 +20,7 @@ public interface IPrincipalAccessor
     string GetTenantId();
 
     /// <summary>
-    /// 获取账号信息
+    ///     获取账号信息
     /// </summary>
     /// <returns></returns>
     T GetUserInfo<T>();
@@ -28,7 +28,7 @@ public interface IPrincipalAccessor
     List<string> GetUserInfoFromToken(string claimType);
 
     /// <summary>
-    /// 获取用户id （未授权异常401）
+    ///     获取用户id （未授权异常401）
     /// </summary>
     /// <returns></returns>
     Guid UserId();

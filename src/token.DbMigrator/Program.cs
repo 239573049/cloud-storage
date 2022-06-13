@@ -22,12 +22,10 @@ Log.Logger = new LoggerConfiguration()
 
 await CreateHostBuilder(args).RunConsoleAsync();
 
-IHostBuilder CreateHostBuilder(string[] args) =>
-    Host.CreateDefaultBuilder(args)
+IHostBuilder CreateHostBuilder(string[] args)
+{
+    return Host.CreateDefaultBuilder(args)
         .AddAppSettingsSecretsJson()
         .ConfigureLogging((context, logging) => logging.ClearProviders())
-        .ConfigureServices((hostContext, services) =>
-        {
-            services.AddHostedService<DbMigratorHostedService>();
-        });
-
+        .ConfigureServices((hostContext, services) => { services.AddHostedService<DbMigratorHostedService>(); });
+}

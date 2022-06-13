@@ -6,12 +6,11 @@ using token.HttpApi.Module;
 namespace token.HttpApi.filters;
 
 /// <summary>
-/// 全局返回拦截
+///     全局返回拦截
 /// </summary>
 public class GlobalResponseFilter : ActionFilterAttribute
 {
     /// <summary>
-    /// 
     /// </summary>
     /// <param name="context"></param>
     [DebuggerStepThrough]
@@ -21,7 +20,7 @@ public class GlobalResponseFilter : ActionFilterAttribute
         {
             if (context.Result is ObjectResult)
             {
-                ObjectResult objectResult = context.Result as ObjectResult;
+                var objectResult = context.Result as ObjectResult;
                 if (objectResult?.GetType().Name == "BadRequestObjectResult")
                 {
                     context.Result = new JsonResult(new
@@ -29,7 +28,6 @@ public class GlobalResponseFilter : ActionFilterAttribute
                         Code = objectResult.StatusCode.ToString(),
                         Data = new
                         {
-
                         },
                         Message = objectResult.Value
                     });
@@ -39,12 +37,11 @@ public class GlobalResponseFilter : ActionFilterAttribute
                     var modelStateResult = objectResult.Value as ModelStateResult;
                     context.Result = new JsonResult(new
                     {
-                        Code = modelStateResult?.Code.ToString(),
+                        Code = modelStateResult?.Code,
                         Data = new
                         {
-
                         },
-                        Message = modelStateResult?.Message
+                        modelStateResult?.Message
                     });
                 }
                 else
@@ -62,19 +59,17 @@ public class GlobalResponseFilter : ActionFilterAttribute
                     Code = 200.ToString(),
                     Data = new
                     {
-
                     }
                 });
             }
             else if (context.Result is ModelStateResult)
             {
-                ModelStateResult modelStateResult2 = context.Result as ModelStateResult;
+                var modelStateResult2 = context.Result as ModelStateResult;
                 context.Result = new JsonResult(new
                 {
-                    Code=modelStateResult2?.Code.ToString(),
+                    Code = modelStateResult2?.Code,
                     Data = new
                     {
-
                     },
                     modelStateResult2?.Message
                 });

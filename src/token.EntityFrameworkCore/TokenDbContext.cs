@@ -6,14 +6,21 @@ using Volo.Abp.EntityFrameworkCore;
 namespace token.EntityFrameworkCore;
 
 [ConnectionStringName("Default")]
-public class TokenDbContext:AbpDbContext<TokenDbContext>
+public class TokenDbContext : AbpDbContext<TokenDbContext>
 {
-    public DbSet<AppVersion> AppVersion { get; set; }
-    
     public TokenDbContext(DbContextOptions<TokenDbContext> options) : base(options)
     {
     }
     
+    /// <summary>
+    /// 版本
+    /// </summary>
+    public DbSet<AppVersion> AppVersion { get; set; }
+    
+    /// <summary>
+    /// 用户
+    /// </summary>
+    public DbSet<Users> Users { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // 只禁用查询跟踪
@@ -22,10 +29,13 @@ public class TokenDbContext:AbpDbContext<TokenDbContext>
 #if DEBUG
 
         //开启更加详细的日志，以性能为代价
-        optionsBuilder.EnableDetailedErrors(true);
+        optionsBuilder.EnableDetailedErrors();
 
 #endif
-        
     }
-    
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.AddConfig();
+    }
 }

@@ -15,7 +15,7 @@ namespace token;
     typeof(TokenEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreSerilogModule)
 )]
-public class TokenWebModule:AbpModule
+public class TokenWebModule : AbpModule
 {
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
@@ -23,6 +23,5 @@ public class TokenWebModule:AbpModule
 
         app.UseUnitOfWork();
         app.UseConfiguredEndpoints();
-
     }
 }
