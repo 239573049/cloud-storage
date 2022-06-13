@@ -147,7 +147,6 @@ public class TokenHttpApiModule:AbpModule
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "GoYes API");
-
                 options.RoutePrefix = string.Empty;
             });
         }
