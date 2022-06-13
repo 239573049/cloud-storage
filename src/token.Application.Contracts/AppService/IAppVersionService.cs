@@ -1,6 +1,11 @@
-﻿namespace token.Application.Contracts.Version;
+﻿using token.Application.Contracts.Version;
 
-public interface IAppVersionAppService
+namespace token.Application.Contracts.AppService;
+
+/// <summary>
+/// 产品信息
+/// </summary>
+public interface IAppVersionService
 {
     /// <summary>
     /// 创建产品版本信息

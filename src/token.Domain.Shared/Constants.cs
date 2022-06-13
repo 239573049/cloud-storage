@@ -5,6 +5,7 @@ public class Constants
     public const string ClaimKey = "id";
 
     public const string EntityKey = "Id";
+    
     public const string User = "user";
 
     public const string Role = "Role";
@@ -26,6 +27,7 @@ public class Constants
     public const string ModelStateResult = nameof(ModelStateResult);
 
     public const string CorsPolicy = nameof(CorsPolicy);
+    
     public const string DefaultTodayDateFormat = "yyyy-MM-dd";
 
     public const string DefaultFullDateFormat = "yyyy-MM-dd HH:mm:ss";

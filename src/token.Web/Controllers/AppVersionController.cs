@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using token.Application.Contracts.AppService;
 using token.Application.Contracts.Version;
 
 namespace token.Controllers;
@@ -10,10 +11,10 @@ namespace token.Controllers;
 [ApiController]
 public class AppVersionController:ControllerBase
 {
-    private readonly IAppVersionAppService _appVersionAppService;
-    public AppVersionController(IAppVersionAppService appVersionAppService)
+    private readonly IAppVersionService _appVersionService;
+    public AppVersionController(IAppVersionService appVersionService)
     {
-        _appVersionAppService = appVersionAppService;
+        _appVersionService = appVersionService;
     }
 
     /// <summary>
@@ -23,7 +24,7 @@ public class AppVersionController:ControllerBase
     [HttpPost("app-version")]
     public async Task CreateAppVersionAsync(AppVersionDto dto)
     {
-        await _appVersionAppService.CreateAppVersionAsync(dto);
+        await _appVersionService.CreateAppVersionAsync(dto);
     }
     
     /// <summary>
@@ -34,7 +35,7 @@ public class AppVersionController:ControllerBase
     [HttpGet("app-version-list/{keyword}")]
     public async Task<List<AppVersionDto>> GetAppVersionListAsync(string keyword)
     {
-        return await _appVersionAppService.GetAppVersionListAsync(keyword);
+        return await _appVersionService.GetAppVersionListAsync(keyword);
     }
     
     /// <summary>
@@ -45,7 +46,7 @@ public class AppVersionController:ControllerBase
     [HttpGet("app-version/{code}")]
     public async Task<AppVersionDto> GetAppVersionAsync(string code)
     {
-        return await _appVersionAppService.GetAppVersionAsync(code);
+        return await _appVersionService.GetAppVersionAsync(code);
     }
 
     /// <summary>
@@ -55,6 +56,6 @@ public class AppVersionController:ControllerBase
     [HttpPut("app-version")]
     public async Task UpdateAppVersionAsync(AppVersionDto dto)
     {
-        await _appVersionAppService.UpdateAppVersionAsync(dto);
+        await _appVersionService.UpdateAppVersionAsync(dto);
     }
 }

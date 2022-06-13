@@ -1,15 +1,16 @@
-﻿using token.Application.Contracts.Version;
+﻿using token.Application.Contracts.AppService;
+using token.Application.Contracts.Version;
 using token.Domain;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
-namespace token.Application.Version;
+namespace token.Application.AppService;
 
-public class AppVersionAppService:ApplicationService,IAppVersionAppService
+public class AppVersionService:ApplicationService,IAppVersionService
 {
     private readonly IAppVersionRepository _appVersionRepository;
-    public AppVersionAppService(IAppVersionRepository appVersionRepository)
+    public AppVersionService(IAppVersionRepository appVersionRepository)
     {
         _appVersionRepository = appVersionRepository;
     }
