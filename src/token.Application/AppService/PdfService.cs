@@ -1,4 +1,5 @@
-﻿using iText.IO.Image;
+﻿using ImageMagick;
+using iText.IO.Image;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
@@ -8,7 +9,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace token.Application.AppService;
 
-public class PdfService:IPdfService,ISingletonDependency
+public class PdfService : IPdfService, ISingletonDependency
 {
 
     /// <inheritdoc />
@@ -29,7 +30,7 @@ public class PdfService:IPdfService,ISingletonDependency
         }
 
         pdfDocument.Close();
-        
+
         streams.ForEach(x => x.Close());
 
         return await Task.FromResult(memoryStream.ToArray());
@@ -46,7 +47,7 @@ public class PdfService:IPdfService,ISingletonDependency
         foreach(var d in streams)
         {
             var bytes = new byte[d.Length];
-            _=await d.ReadAsync(bytes);
+            _ = await d.ReadAsync(bytes);
             d.Close();
             var imageData = ImageDataFactory.Create(bytes);
 
@@ -60,7 +61,28 @@ public class PdfService:IPdfService,ISingletonDependency
         document.Close();
         var resultBytes = memoryStream.GetBuffer();
         memoryStream.Close();
-        
+
         return resultBytes;
+    }
+
+    /// <inheritdoc />
+    public Task<byte[]> PdfToImgAsync(List<Stream> streams)
+    {
+        var stream = new MemoryStream();
+        // MagickReadSettings settings = new MagickReadSettings();
+        // settings.Density = new Density(900, 900);//设置质量
+        // using (MagickImageCollection images = new MagickImageCollection())
+        // {
+        //   
+        //     images.Read(streams, settings);
+        //     for (int i = 0; i < images.Count; i++)
+        //     {
+        //         MagickImage image = (MagickImage)images[i];
+        //         image.Format = MagickFormat.Png;
+        //         image.Write(path.Replace(Path.GetExtension(path), "") + "-" + i + ".png");
+        //     }     
+        // }
+
+        return Task.FromResult(stream.GetBuffer());
     }
 }

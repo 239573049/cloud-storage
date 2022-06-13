@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="11.2.0" />
       <PackageReference Include="Volo.Abp.AutoMapper" Version="5.2.2" />
       <PackageReference Include="Volo.Abp.Core" Version="5.2.2" />
       <PackageReference Include="Volo.Abp.Ddd.Application" Version="5.2.2" />

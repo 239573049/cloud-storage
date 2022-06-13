@@ -43,11 +43,28 @@ public class PdfController:ControllerBase
     public async Task<IActionResult> ImgToPdfAsync(List<IFormFile> files)
     {
         var stream =  files.Select(x=>x.OpenReadStream()).ToList();
-        
         var result = await _pdfService.ImgToPdfAsync(stream);
+        
         return new FileStreamResult(new MemoryStream(result), FileType.Pdf)
         {
-            FileDownloadName = $"{Guid.NewGuid():N}合并后的文件.pdf"
+            FileDownloadName = $"{Guid.NewGuid():N}图片转换Pdf.pdf"
+        };
+    }
+
+    /// <summary>
+    /// Pdf转换图片
+    /// </summary>
+    /// <param name="files"></param>
+    /// <returns></returns>
+    [HttpPost("pdf-to-img")]
+    public async Task<IActionResult> PdfToImgAsync(List<IFormFile> files)
+    {
+        var stream =  files.Select(x=>x.OpenReadStream()).ToList();
+        var result = await _pdfService.PdfToImgAsync(stream);
+        
+        return new FileStreamResult(new MemoryStream(result), FileType.Pdf)
+        {
+            FileDownloadName = $"{Guid.NewGuid():N}图片转换Pdf.pdf"
         };
     }
 }
