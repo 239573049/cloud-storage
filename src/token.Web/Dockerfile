@@ -20,7 +20,9 @@ WORKDIR "/src/src/token.Web"
 RUN dotnet build "token.Web.csproj" -c Release --os linux -o /app/build
 
 FROM build AS publish
-RUN apt-get update -y && apt-get install -y libgdiplus && apt-get clean && ln -s /usr/lib/libgdiplus.so /usr/lib/gdiplus.dll
+RUN apt-get update -y 
+RUN apt-get install -y libgdiplus 
+RUN ln -s /usr/lib/libgdiplus.so /usr/lib/gdiplus.dll
 RUN dotnet publish "token.Web.csproj" -c Release --os linux -o /app/publish
 
 FROM base AS final
