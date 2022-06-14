@@ -1,16 +1,23 @@
-﻿using ImageMagick;
+﻿using System.Drawing;
+using System.Drawing.Imaging;
 using iText.IO.Image;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
-using iText.Layout.Element;
 using token.Application.Contracts.AppService;
+using token.Application.Helpers;
 using Volo.Abp.DependencyInjection;
+using Image = iText.Layout.Element.Image;
 
 namespace token.Application.AppService;
 
 public class PdfService : IPdfService, ISingletonDependency
 {
+    private readonly ZipUtility _zipUtility;
+    public PdfService(ZipUtility zipUtility)
+    {
+        _zipUtility = zipUtility;
+    }
 
     /// <inheritdoc />
     public async Task<byte[]> MangePdfAsync(List<Stream> streams)
@@ -66,23 +73,29 @@ public class PdfService : IPdfService, ISingletonDependency
     }
 
     /// <inheritdoc />
-    public Task<byte[]> PdfToImgAsync(List<Stream> streams)
+    public async Task<byte[]> PdfToImgAsync(List<Stream> streams)
     {
-        var stream = new MemoryStream();
-        // MagickReadSettings settings = new MagickReadSettings();
-        // settings.Density = new Density(900, 900);//设置质量
-        // using (MagickImageCollection images = new MagickImageCollection())
-        // {
-        //   
-        //     images.Read(streams, settings);
-        //     for (int i = 0; i < images.Count; i++)
-        //     {
-        //         MagickImage image = (MagickImage)images[i];
-        //         image.Format = MagickFormat.Png;
-        //         image.Write(path.Replace(Path.GetExtension(path), "") + "-" + i + ".png");
-        //     }     
-        // }
+        var dictionary = new Dictionary<string, Stream>();
+        foreach (var s in streams)
+        {
+            var memoryStream = new MemoryStream();
+            var doc = new Spire.Pdf.PdfDocument();
+            doc.LoadFromStream(s);
+            
+            System.Drawing.Image emf = doc.SaveAsImage(0,Spire.Pdf.Graphics.PdfImageType.Bitmap);
+            var zoomImg = new Bitmap(emf.Size.Width * 2, emf.Size.Height * 2);
+            using (Graphics g = Graphics.FromImage(zoomImg))
+            {
+                g.ScaleTransform(2.0f, 2.0f);
+                g.DrawImage(emf, new Rectangle(new Point(0, 0), emf.Size), new Rectangle(new Point(0, 0), emf.Size), GraphicsUnit.Pixel);
+            }
+            
+            emf.Save(memoryStream, ImageFormat.Png);
+            dictionary.Add($"{Guid.NewGuid():N}.png",memoryStream);
+        }
 
-        return Task.FromResult(stream.GetBuffer());
+        var zip=await _zipUtility.PackageManyZipAsync(dictionary);
+        
+        return await zip.GetAllBytesAsync();
     }
 }

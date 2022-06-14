@@ -6,4 +6,9 @@ public class FileType
     /// Pdf格式
     /// </summary>
     public const string Pdf= "application/pdf";
+    
+    /// <summary>
+    /// 流格式
+    /// </summary>
+    public const string Stream =  "application/octet-stream";
 }

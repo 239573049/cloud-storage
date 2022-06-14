@@ -62,9 +62,9 @@ public class PdfController:ControllerBase
         var stream =  files.Select(x=>x.OpenReadStream()).ToList();
         var result = await _pdfService.PdfToImgAsync(stream);
         
-        return new FileStreamResult(new MemoryStream(result), FileType.Pdf)
+        return new FileStreamResult(new MemoryStream(result), FileType.Stream)
         {
-            FileDownloadName = $"{Guid.NewGuid():N}图片转换Pdf.pdf"
+            FileDownloadName = $"{Guid.NewGuid():N}图片转换Pdf.zip"
         };
     }
 }
