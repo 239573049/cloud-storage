@@ -36,7 +36,7 @@ steps:
         path: /root/logs/token/logs:/app/logs
     commands:
       - docker stop token && docker rm token
-      - docker run -d -p 8000:80 -p 8081:443 --network token --restart always --name token token:latest
+      - docker run -d -p 8000:80 -p 8081:443 --network token --restart always --name token token
       
 volumes:
   - name: dockersock
