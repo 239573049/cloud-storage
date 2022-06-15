@@ -125,11 +125,9 @@ public class TokenHttpApiModule:AbpModule
     {
         context.Services.AddCors(options =>
         {
-            options.AddPolicy("CorsPolicy", builder =>
+            options.AddPolicy("CorsPolicy", corsBuilder=>
             {
-                builder.SetIsOriginAllowed((string _) => true)
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
+                corsBuilder.SetIsOriginAllowed((string _) => true).AllowAnyMethod().AllowAnyHeader()
                     .AllowCredentials();
             });
         });
@@ -152,13 +150,12 @@ public class TokenHttpApiModule:AbpModule
         }
 
         app.UseCorrelationId();
-        app.UseStaticFiles();
+        
         app.UseRouting();
-        app.UseCors("CorsPolicy");
+        app.UseCors("CorsPolicy");//CORS strategy
         app.UseAuditing();
         
         app.UseAuthentication();
-        app.UseAuthorization();
 
     }
 }
