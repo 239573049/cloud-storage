@@ -42,7 +42,8 @@ public class GlobalExceptionsFilter : ExceptionFilterAttribute
 
             context.Result = new ContentResult
             {
-                Content = JsonConvert.SerializeObject(response), StatusCode = 200,
+                Content = JsonConvert.SerializeObject(response), 
+                StatusCode = 500,
                 ContentType = "application/json;charset=utf-8"
             };
         }
