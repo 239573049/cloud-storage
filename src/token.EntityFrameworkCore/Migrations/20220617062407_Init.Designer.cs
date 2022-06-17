@@ -11,8 +11,8 @@ using token.EntityFrameworkCore;
 namespace token.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(TokenDbContext))]
-    [Migration("20220611151604_CreateUsers")]
-    partial class CreateUsers
+    [Migration("20220617062407_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

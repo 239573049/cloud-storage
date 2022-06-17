@@ -15,7 +15,7 @@ using Volo.Abp.Modularity;
 
 namespace token.HttpApi;
 
-public class TokenHttpApiModule:AbpModule
+public class TokenHttpApiModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
@@ -25,7 +25,7 @@ public class TokenHttpApiModule:AbpModule
         ConfigureSwaggerServices(context);
         ConfigurationMvc(context);
     }
-    
+
     private void ConfigurationMvc(ServiceConfigurationContext context)
     {
         context.Services.AddMvc(o =>
@@ -47,13 +47,14 @@ public class TokenHttpApiModule:AbpModule
         {
             string[] files = Directory.GetFiles(AppContext.BaseDirectory, "*.xml");//获取api文档
             string[] array = files;
-            foreach (string filePath in array)
+            foreach(string filePath in array)
             {
                 o.IncludeXmlComments(filePath, includeControllerXmlComments: true);
             }
             o.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "token API", Version = "v1"
+                Title = "token API",
+                Version = "v1"
             });
             o.DocInclusionPredicate((docName, description) => true);
             o.CustomSchemaIds(type => type.FullName);
@@ -72,7 +73,10 @@ public class TokenHttpApiModule:AbpModule
             });
             o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description = "请输入文字“Bearer”，后跟空格和JWT值，格式  : Bearer {token}", Name = "Authorization", In = ParameterLocation.Header, Type = SecuritySchemeType.ApiKey
+                Description = "请输入文字“Bearer”，后跟空格和JWT值，格式  : Bearer {token}",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey
             });
         });
     }
@@ -88,7 +92,7 @@ public class TokenHttpApiModule:AbpModule
 
         var configurationSection = configuration.GetSection(nameof(TokenOptions));
         var tokenOptions = configurationSection.Get<TokenOptions>();
-        if (string.IsNullOrEmpty(tokenOptions.Issuer))
+        if(string.IsNullOrEmpty(tokenOptions.Issuer))
             throw new Exception("未设置JWT权限配置");
         context.Services.Configure<TokenOptions>(configurationSection);
         context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -111,7 +115,7 @@ public class TokenHttpApiModule:AbpModule
                         // 添加signalr的token 因为signalr的token在请求头上所以需要设置
                         var accessToken = context.Request.Query["access_token"];
                         var path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments(SignalRConstants.Token))
+                        if(!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments(SignalRConstants.Token))
                         {
                             context.Token = accessToken;
                         }
@@ -125,7 +129,7 @@ public class TokenHttpApiModule:AbpModule
     {
         context.Services.AddCors(options =>
         {
-            options.AddPolicy("CorsPolicy", corsBuilder=>
+            options.AddPolicy("CorsPolicy", corsBuilder =>
             {
                 corsBuilder.SetIsOriginAllowed((string _) => true).AllowAnyMethod().AllowAnyHeader()
                     .AllowCredentials();
@@ -138,7 +142,7 @@ public class TokenHttpApiModule:AbpModule
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
 
-        if (env.IsDevelopment())
+        if(env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
@@ -150,11 +154,11 @@ public class TokenHttpApiModule:AbpModule
         }
 
         app.UseCorrelationId();
-        
+
         app.UseRouting();
         app.UseCors("CorsPolicy");//CORS strategy
         app.UseAuditing();
-        
+
         app.UseAuthentication();
 
     }
