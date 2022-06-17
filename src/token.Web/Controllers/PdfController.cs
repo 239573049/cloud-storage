@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using token.Application.Contracts.AppService;
 using token.Domain.Shared;
+using Volo.Abp;
 
 namespace token.Controllers;
 
@@ -26,6 +27,11 @@ public class PdfController:ControllerBase
     [HttpPost("mange-pdf")]
     public async Task<IActionResult> MangePdfAsync(List<IFormFile> files)
     {
+        if (files.Any(x => !x.FileName.EndsWith(".pdf")))
+        {
+            throw new BusinessException(message: "存在后缀名不为pdf的文件");
+        }
+        
         var stream =  files.Select(x=>x.OpenReadStream()).ToList();
         var result = await _pdfService.MangePdfAsync(stream);
         return new FileStreamResult(new MemoryStream(result), FileType.Pdf)
@@ -59,6 +65,11 @@ public class PdfController:ControllerBase
     [HttpPost("pdf-to-img")]
     public async Task<IActionResult> PdfToImgAsync(List<IFormFile> files)
     {
+        if (files.Any(x => !x.FileName.EndsWith(".pdf")))
+        {
+            throw new BusinessException(message: "存在后缀名不为pdf的文件");
+        }
+        
         var stream =  files.Select(x=>x.OpenReadStream()).ToList();
         var result = await _pdfService.PdfToImgAsync(stream);
         
