@@ -35,7 +35,7 @@ steps:
       - name: logs
         path: /root/logs/token/logs:/app/logs
     commands:
-      - docker stop token:dev && docker rm token:dev
+      - docker stop token && docker rm token
       - docker run -d -p 8000:80 -p 8081:443 --network token -e ASPNETCORE_ENVIRONMENT=Development --restart always --name token token:dev
       
 volumes:
