@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using token.Domain.Shared;
+using token.SignalR.Web.Hubs;
 
 namespace token.SignalR.Web.Controllers;
 
@@ -10,6 +12,13 @@ namespace token.SignalR.Web.Controllers;
 [ApiController]
 public class TokenController:ControllerBase
 {
+    private readonly IHubContext<TokenHub> _hubContext;
+
+    public TokenController(IHubContext<TokenHub> hubContext)
+    {
+        _hubContext = hubContext;
+    }
+
     /// <summary>
     /// 获取Token服务在线人数
     /// </summary>
@@ -20,5 +29,15 @@ public class TokenController:ControllerBase
         var count=await RedisHelper.GetAsync<long>(SignalRConstants.TokenName);
 
         return count;
+    }
+
+    /// <summary>
+    /// 发送信息至所有用户
+    /// </summary>
+    /// <param name="data"></param>
+    [HttpPost]
+    public async Task SendMessage([FromBody]string data)
+    {
+        await _hubContext.Clients.All.SendAsync(data);
     }
 }
