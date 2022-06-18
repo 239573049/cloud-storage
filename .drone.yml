@@ -79,7 +79,7 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
       - name: logs
-        path: /root/logs/token/logs:/app/logs
+        path: /root/logs/signalr/logs:/app/logs
     commands:
       - docker stop signalr && docker rm signalr
       - docker run -d --network token -e ASPNETCORE_ENVIRONMENT=Development --restart always --name signalr signalr:dev
