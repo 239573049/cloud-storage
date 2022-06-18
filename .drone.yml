@@ -42,7 +42,53 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
-      
+
+---
+kind: pipeline
+name: signalr
+type: docker
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: signalr:dev
+    when:
+      branch:
+        - master
+    image: docker:dind
+    environment:
+      IMAGE: signalr:dev
+      ASPNETCORE_ENVIRONMENT: Development
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - docker build -f ./src/SignalR/token.SignalR.Web/Dockerfile  -t signalr:dev .
+
+  - name: signalr-push
+    image: docker:dind
+    when:
+      branch:
+        - master
+    environment:
+      IMAGE: signalr:dev
+      ASPNETCORE_ENVIRONMENT: Development
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+      - name: logs
+        path: /root/logs/token/logs:/app/logs
+    commands:
+      - docker stop signalr && docker rm signalr
+      - docker run -d --network token -e ASPNETCORE_ENVIRONMENT=Development --restart always --name signalr signalr:dev
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+
 ---
 kind: pipeline
 name: after
