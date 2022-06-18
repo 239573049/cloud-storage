@@ -36,7 +36,7 @@ steps:
         path: /root/logs/token/logs:/app/logs
     commands:
       - docker stop token && docker rm token
-      - docker run -d -p 8000:80 -p 8081:443 --network token -e ASPNETCORE_ENVIRONMENT=Development --restart always --name token token:dev
+      - docker run -d -p 8000:80 -p 8081:443 -v /root/logs/token/logs:/app/logs --network token -e ASPNETCORE_ENVIRONMENT=Development --restart always --name token token:dev
       
 volumes:
   - name: dockersock
@@ -83,7 +83,7 @@ steps:
         path: /root/logs/signalr/logs:/app/logs
     commands:
       - docker stop signalr && docker rm signalr
-      - docker run -d --network token -e ASPNETCORE_ENVIRONMENT=Development --restart always --name signalr signalr:dev
+      - docker run -d --network token -e ASPNETCORE_ENVIRONMENT=Development -v /root/logs/signalr/logs:/app/logs  --restart always --name signalr signalr:dev
 
 volumes:
   - name: dockersock
