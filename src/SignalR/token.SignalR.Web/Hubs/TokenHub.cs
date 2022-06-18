@@ -31,7 +31,7 @@ public class TokenHub:Hub
     /// 发送至全部在线人员
     /// </summary>
     /// <param name="value"></param>
-    [HubMethodName("send-all")]
+    // [HubMethodName("send-all")]
     public async Task SendAllAsync(string value)
     {
         await Clients.All.SendAsync("all-message", value);

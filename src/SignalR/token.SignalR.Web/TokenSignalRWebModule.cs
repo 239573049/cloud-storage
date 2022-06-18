@@ -2,30 +2,29 @@
 using token.HttpApi;
 using token.SignalR.Web.Hubs;
 using Volo.Abp;
+using Volo.Abp.AspNetCore.Serilog;
+using Volo.Abp.Autofac;
 using Volo.Abp.Modularity;
 
 namespace token.SignalR.Web;
 
 [DependsOn(
-    typeof(TokenHttpApiModule)
-    )]
-public class TokenSignalRWebModule:AbpModule
+    typeof(TokenHttpApiModule),
+    typeof(AbpAutofacModule),
+    typeof(AbpAspNetCoreSerilogModule)
+)]
+public class TokenSignalRWebModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var services = context.Services;
-        
+
         services.AddSignalR();
-        
     }
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         var app = context.GetApplicationBuilder();
-        app.UseEndpoints(x =>
-        {
-            x.MapHub<TokenHub>(SignalRConstants.Token);
-        });
-
+        app.UseEndpoints(x => { x.MapHub<TokenHub>(SignalRConstants.Token); });
     }
 }
