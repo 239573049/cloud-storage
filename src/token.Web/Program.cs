@@ -72,10 +72,12 @@ var app = builder.Build();
 await app.InitializeApplicationAsync();
 app.MapControllers();
 
+var serviceName = Environment.GetEnvironmentVariable("ServiceName");
+var servicePort = Environment.GetEnvironmentVariable("ServicePort");
+
 RegisterConsul(app, app.Configuration, app.Lifetime);
 
 await app.RunAsync();
-
 void RegisterConsul(IApplicationBuilder app, IConfiguration configuration, IHostApplicationLifetime lifetime)
 {
     var configurationSection = configuration.GetSection(ConsulOption.Name);
@@ -90,8 +92,8 @@ void RegisterConsul(IApplicationBuilder app, IConfiguration configuration, IHost
     {
         ID = Guid.NewGuid().ToString(),
         Name = consulOption.ServiceName,
-        // Address = consulOption.ServiceIP,
-        Port = consulOption.ServicePort,
+        Address = serviceName??string.Empty,
+        Port =string.IsNullOrWhiteSpace(servicePort)?Convert.ToInt32(servicePort):80,
         Check = new AgentCheckRegistration()
         {
             DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(5),
