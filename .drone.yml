@@ -61,7 +61,6 @@ volumes:
       path: /var/run/docker.sock
 
 ---
-
 kind: pipeline
 name: signalr
 type: docker
@@ -128,3 +127,4 @@ volumes:
 
 depends_on:
   - token
+  - signalr
