@@ -98,7 +98,7 @@ void RegisterConsul(IApplicationBuilder app, IConfiguration configuration, IHost
         {
             DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(5),
             Interval = TimeSpan.FromSeconds(10),
-            HTTP = consulOption.ServiceHealthCheck,
+            HTTP = "http://"+serviceName+":"+servicePort+"/health",
             Timeout = TimeSpan.FromSeconds(5)
         }
     };
