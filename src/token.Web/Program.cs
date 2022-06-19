@@ -3,6 +3,8 @@ using Serilog;
 using Serilog.Events;
 using token;
 using token.HttpApi.Module;
+using Winton.Extensions.Configuration.Consul;
+using Winton.Extensions.Configuration.Consul.Parsers;
 
 Log.Logger = new LoggerConfiguration()
 #if DEBUG
@@ -21,10 +23,47 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 Log.Information("管理服务启动...");
+
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Host.AddAppSettingsSecretsJson()
     .UseAutofac()
     .UseSerilog();
+
+builder.Configuration
+    .AddConsul("token", options =>
+    {
+    options.Parser = new SimpleConfigurationParser();
+    options.ConsulConfigurationOptions = cco =>
+    {
+        cco.Address = new Uri("http://consul:8500");
+        options.Optional = true;
+        options.ReloadOnChange = true;
+        options.OnLoadException = exception =>
+        {
+            Console.WriteLine(exception.Exception.Message);
+        };
+        options.ConvertConsulKVPairToConfig = kvPair =>
+        {
+            var normalizedKey = kvPair.Key
+                .Replace("token/", string.Empty)
+                .Replace("__", "/")
+                .Replace("/", ":")
+                .Trim('/');
+
+            using Stream valueStream = new MemoryStream(kvPair.Value);
+            using var streamReader = new StreamReader(valueStream);
+            var parsedValue = streamReader.ReadToEnd();
+
+            return new Dictionary<string, string>()
+            {
+                { normalizedKey, parsedValue }
+            };
+        };
+    };
+    options.ReloadOnChange = true;
+}).Build();
+
 
 builder.Services.AddSingleton(Log.Logger);
 
@@ -51,7 +90,7 @@ void RegisterConsul(IApplicationBuilder app, IConfiguration configuration, IHost
     {
         ID = Guid.NewGuid().ToString(),
         Name = consulOption.ServiceName,
-        Address = consulOption.ServiceIP,
+        // Address = consulOption.ServiceIP,
         Port = consulOption.ServicePort,
         Check = new AgentCheckRegistration()
         {
