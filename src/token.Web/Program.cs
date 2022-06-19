@@ -72,6 +72,7 @@ var app = builder.Build();
 await app.InitializeApplicationAsync();
 app.MapControllers();
 
+// 在环境变量获取当前服务的服务名称
 var serviceName = Environment.GetEnvironmentVariable("ServiceName");
 var servicePort = Environment.GetEnvironmentVariable("ServicePort");
 
