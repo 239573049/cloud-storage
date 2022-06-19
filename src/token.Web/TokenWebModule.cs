@@ -37,6 +37,7 @@ public  class TokenWebModule : AbpModule
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         ConfigConsul(context, context.Services.GetConfiguration());
+        context.Services.AddHealthChecks();
     }
 
     /// <summary>
