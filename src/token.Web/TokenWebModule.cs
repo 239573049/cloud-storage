@@ -29,7 +29,16 @@ public  class TokenWebModule : AbpModule
         context.Services.Configure<ConsulOption>(configurationSection);
         
     }
-    
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        ConfigConsul(context, context.Services.GetConfiguration());
+    }
+
     /// <summary>
     /// 
     /// </summary>
