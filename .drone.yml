@@ -32,8 +32,6 @@ steps:
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
-      - name: logs
-        path: /root/logs/token/logs:/app/logs
     commands:
       - docker stop token && docker rm token
       - docker stop token1 && docker rm token1
