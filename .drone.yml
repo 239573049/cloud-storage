@@ -32,6 +32,7 @@ steps:
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
+        
     commands:
       - docker stop token && docker rm token
       - docker stop token1 && docker rm token1
