@@ -37,9 +37,9 @@ RegisterConsul(app, app.Configuration, app.Lifetime);
 
 await app.RunAsync();
 
-void RegisterConsul(IApplicationBuilder app,IConfiguration configuration, IHostApplicationLifetime lifetime)
+void RegisterConsul(IApplicationBuilder app, IConfiguration configuration, IHostApplicationLifetime lifetime)
 {
-    var configurationSection = configuration.GetSection(nameof(ConsulOption));
+    var configurationSection = configuration.GetSection(ConsulOption.Name);
     var consulOption = configurationSection.Get<ConsulOption>();
 
     var consulClient = new ConsulClient(x =>
@@ -51,7 +51,7 @@ void RegisterConsul(IApplicationBuilder app,IConfiguration configuration, IHostA
     {
         ID = Guid.NewGuid().ToString(),
         Name = consulOption.ServiceName,
-        Address =consulOption.Address,
+        Address = consulOption.ServiceIP,
         Port = consulOption.ServicePort,
         Check = new AgentCheckRegistration()
         {
@@ -61,7 +61,7 @@ void RegisterConsul(IApplicationBuilder app,IConfiguration configuration, IHostA
             Timeout = TimeSpan.FromSeconds(5)
         }
     };
-        
+
     consulClient.Agent.ServiceRegister(registration).Wait();
     lifetime.ApplicationStopping.Register(() =>
     {
