@@ -53,7 +53,7 @@ steps:
         path: /root/logs/token1/logs:/app/logs
     commands:
       - docker stop token1 && docker rm token1
-      - docker run -d -p 8100:80 -p 8181:443 -v /root/logs/token1/logs:/app/logs --network token -e ASPNETCORE_ENVIRONMENT=Development --restart always --name token1 token:dev
+      - docker run -d -v /root/logs/token1/logs:/app/logs --network token -e ASPNETCORE_ENVIRONMENT=Development --restart always --name token1 token:dev
 
 volumes:
   - name: dockersock
