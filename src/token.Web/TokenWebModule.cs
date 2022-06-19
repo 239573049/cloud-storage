@@ -11,6 +11,9 @@ using Volo.Abp.Modularity;
 
 namespace token;
 
+/// <summary>
+/// web
+/// </summary>
 [DependsOn(
     typeof(TokenHttpApiModule),
     typeof(AbpAutofacModule),
@@ -18,7 +21,7 @@ namespace token;
     typeof(TokenEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreSerilogModule)
 )]
-public class TokenWebModule : AbpModule
+public  class TokenWebModule : AbpModule
 {
     private void ConfigConsul(ServiceConfigurationContext context, IConfiguration configuration)
     {
@@ -27,6 +30,10 @@ public class TokenWebModule : AbpModule
         
     }
     
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="context"></param>
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         var app = context.GetApplicationBuilder();

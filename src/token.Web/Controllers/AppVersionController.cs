@@ -12,6 +12,8 @@ namespace token.Controllers;
 public class AppVersionController:ControllerBase
 {
     private readonly IAppVersionService _appVersionService;
+
+    /// <inheritdoc />
     public AppVersionController(IAppVersionService appVersionService)
     {
         _appVersionService = appVersionService;
