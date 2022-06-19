@@ -37,7 +37,22 @@ steps:
     commands:
       - docker stop token && docker rm token
       - docker run -d -p 8000:80 -p 8081:443 -v /root/logs/token/logs:/app/logs --network token -e ASPNETCORE_ENVIRONMENT=Development --restart always --name token token:dev
-      
+
+  - name: token-push1
+    image: docker:dind
+    when:
+      branch:
+        - master
+    environment:
+      IMAGE: token:dev
+      ASPNETCORE_ENVIRONMENT: Development
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - docker stop token1 && docker rm token1
+      - docker run -d -p 8100:80 -p 8181:443 -v /root/logs/token1/logs:/app/logs --network token -e ASPNETCORE_ENVIRONMENT=Development --restart always --name token1 token:dev
+
 volumes:
   - name: dockersock
     host:
