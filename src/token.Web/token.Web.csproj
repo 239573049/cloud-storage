@@ -12,9 +12,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Consul" Version="1.6.10.6" />
         <PackageReference Include="Consul.AspNetCore" Version="1.6.10.6" />
-        <PackageReference Include="ConsulClient" Version="1.0.3.22" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
