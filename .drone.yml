@@ -91,6 +91,19 @@ volumes:
       path: /var/run/docker.sock
 
 ---
+
+kind: pipeline
+name: signalr
+type: docker
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+
+
+---
 kind: pipeline
 name: after
 type: docker
