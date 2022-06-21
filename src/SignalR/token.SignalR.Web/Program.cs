@@ -16,7 +16,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Async(c => c.Console())
     .CreateLogger();
 
-Log.Information("管理服务启动...");
+Log.Information("Signalr...");
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.AddAppSettingsSecretsJson()
     .UseAutofac()

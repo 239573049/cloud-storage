@@ -25,4 +25,11 @@ public interface IPdfService
     /// <param name="streams"></param>
     /// <returns></returns>
     Task<byte[]> PdfToImgAsync(List<Stream> streams);
+
+    /// <summary>
+    /// Html转换Pdf
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    Task<byte[]> HtmlToPdfAsync(string value);
 }

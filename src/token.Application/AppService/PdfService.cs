@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
+using iText.Html2pdf;
 using iText.IO.Image;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
@@ -97,5 +98,15 @@ public class PdfService : IPdfService, ISingletonDependency
         var zip=await _zipUtility.PackageManyZipAsync(dictionary);
         
         return await zip.GetAllBytesAsync();
+    }
+
+    /// <inheritdoc />
+    public async Task<byte[]> HtmlToPdfAsync(string url)
+    {
+        var stream = new MemoryStream();
+        
+        HtmlConverter.ConvertToPdf(url,new PdfWriter(stream));
+        
+        return await stream.GetAllBytesAsync();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using token.Application.Contracts.AppService;
 using token.Application.Contracts.Version;
+using Volo.Abp;
 
 namespace token.Controllers;
 
@@ -26,6 +27,7 @@ public class AppVersionController:ControllerBase
     [HttpPost("app-version")]
     public async Task CreateAppVersionAsync(AppVersionDto dto)
     {
+        throw new BusinessException(message:"错误");
         await _appVersionService.CreateAppVersionAsync(dto);
     }
     
