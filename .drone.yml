@@ -1,6 +1,6 @@
 kind: pipeline
 name: token
-type: docker
+type: kubernetes
 
 platform:
   os: linux
@@ -50,7 +50,7 @@ volumes:
 
 kind: pipeline
 name: signalr
-type: docker
+type: kubernetes
 
 platform:
   os: linux
@@ -96,7 +96,7 @@ volumes:
 ---
 kind: pipeline
 name: after
-type: docker
+type: kubernetes
 
 steps:
   - name: notify
