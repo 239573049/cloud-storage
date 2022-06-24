@@ -99,14 +99,4 @@ public class PdfService : IPdfService, ISingletonDependency
         
         return await zip.GetAllBytesAsync();
     }
-
-    /// <inheritdoc />
-    public async Task<byte[]> HtmlToPdfAsync(string url)
-    {
-        var stream = new MemoryStream();
-        
-        HtmlConverter.ConvertToPdf(url,new PdfWriter(stream));
-        
-        return await stream.GetAllBytesAsync();
-    }
 }

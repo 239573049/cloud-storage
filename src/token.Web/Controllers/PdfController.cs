@@ -78,20 +78,4 @@ public class PdfController:ControllerBase
             FileDownloadName = $"{Guid.NewGuid():N}图片转换Pdf.zip"
         };
     }
-
-    /// <summary>
-    /// Html转Pdf
-    /// </summary>
-    /// <param name="url"></param>
-    /// <returns></returns>
-    [HttpPost("html-to-pdf")]
-    public async Task<IActionResult> HtmlToPdfAsync(string url)
-    {
-        var result = await _pdfService.HtmlToPdfAsync(url);
-        
-        return new FileStreamResult(new MemoryStream(result), FileType.Stream)
-        {
-            FileDownloadName = $"{Guid.NewGuid():N}Htp转Pdf.zip"
-        };
-    }
 }
