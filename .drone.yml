@@ -1,6 +1,6 @@
 kind: pipeline
 name: token
-type: kubernetes
+type: docker
 
 platform:
   os: linux
@@ -22,56 +22,53 @@ volumes:
     host:
       path: /var/run/docker.sock
 
-#---
-#
-#kind: pipeline
-#name: signalr
-#type: kubernetes
-#
-#platform:
-#  os: linux
-#  arch: amd64
-#
-#steps:
-#  - name: signalr:dev
-#    when:
-#      branch:
-#        - master
-#    image: docker:dind
-#    environment:
-#      IMAGE: signalr:dev
-#      ASPNETCORE_ENVIRONMENT: Development
-#    volumes:
-#      - name: dockersock
-#        path: /var/run/docker.sock
-#    commands:
-#      - docker build -f ./src/SignalR/token.SignalR.Web/Dockerfile  -t signalr:dev .
-#      - docker stop signalr && docker rm signalr
-#      - docker run -d --network token -e ASPNETCORE_ENVIRONMENT=Development -v /root/logs/signalr/logs:/app/logs  --restart always --name signalr signalr:dev
-#
-#volumes:
-#  - name: dockersock
-#    host:
-#      path: /var/run/docker.sock
+---
 
-#---
-#kind: pipeline
-#name: after
-#type: kubernetes
-#
-#steps:
-#  - name: notify
-#    image: docker:dind
-#    volumes:
-#      - name: dockersock
-#        path: /var/run/docker.sock
-#    commands:
-#      - docker system prune -f
-#
-#volumes:
-#  - name: dockersock
-#    host:
-#      path: /var/run/docker.sock
-#depends_on:
-#  - token
-#  - signalr
+kind: pipeline
+name: signalr
+type: docker
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: signalr:dev
+    when:
+      branch:
+        - master
+    image: docker:dind
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - docker build -f ./src/SignalR/token.SignalR.Web/Dockerfile  -t signalr:dev .
+      - docker stop signalr && docker rm signalr
+      - docker run -d --network token -e ASPNETCORE_ENVIRONMENT=Development -v /root/logs/signalr/logs:/app/logs  --restart always --name signalr signalr:dev
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+
+---
+kind: pipeline
+name: after
+type: docker
+
+steps:
+  - name: notify
+    image: docker:dind
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - docker system prune -f
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+depends_on:
+  - token
+  - signalr
