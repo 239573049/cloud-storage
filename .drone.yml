@@ -64,6 +64,7 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
+      
 depends_on:
   - token
   - signalr
