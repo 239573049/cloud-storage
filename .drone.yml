@@ -9,9 +9,6 @@ platform:
 steps:
   - name: token:dev
     image: docker:dind
-    environment:
-      IMAGE: token:dev
-      ASPNETCORE_ENVIRONMENT: Development
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
@@ -57,24 +54,24 @@ volumes:
 #    host:
 #      path: /var/run/docker.sock
 
----
-kind: pipeline
-name: after
-type: kubernetes
-
-steps:
-  - name: notify
-    image: docker:dind
-    volumes:
-      - name: dockersock
-        path: /var/run/docker.sock
-    commands:
-      - docker system prune -f
-
-volumes:
-  - name: dockersock
-    host:
-      path: /var/run/docker.sock
-depends_on:
-  - token
+#---
+#kind: pipeline
+#name: after
+#type: kubernetes
+#
+#steps:
+#  - name: notify
+#    image: docker:dind
+#    volumes:
+#      - name: dockersock
+#        path: /var/run/docker.sock
+#    commands:
+#      - docker system prune -f
+#
+#volumes:
+#  - name: dockersock
+#    host:
+#      path: /var/run/docker.sock
+#depends_on:
+#  - token
 #  - signalr
