@@ -5,7 +5,6 @@ type: docker
 platform:
   os: linux
   arch: amd64
-  
 steps:
   - name: token:dev
     image: docker:dind
@@ -21,8 +20,8 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
+      
 ---
-
 kind: pipeline
 name: signalr
 type: docker
@@ -49,6 +48,7 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
+      
 ---
 kind: pipeline
 name: after
@@ -62,7 +62,6 @@ steps:
         path: /var/run/docker.sock
     commands:
       - docker system prune -f
-
 volumes:
   - name: dockersock
     host:
