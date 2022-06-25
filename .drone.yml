@@ -20,7 +20,7 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
-      
+
 ---
 kind: pipeline
 name: signalr
@@ -48,7 +48,7 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
-      
+
 ---
 kind: pipeline
 name: after
