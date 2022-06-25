@@ -77,4 +77,4 @@ volumes:
       path: /var/run/docker.sock
 depends_on:
   - token
-  - signalr
+#  - signalr
