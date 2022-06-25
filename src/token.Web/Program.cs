@@ -81,26 +81,23 @@ RegisterConsul(app, app.Configuration, app.Lifetime);
 await app.RunAsync();
 void RegisterConsul(IApplicationBuilder app, IConfiguration configuration, IHostApplicationLifetime lifetime)
 {
-    var configurationSection = configuration.GetSection(ConsulOption.Name);
-    var consulOption = configurationSection.Get<ConsulOption>();
-
     var consulClient = new ConsulClient(x =>
     {
-        x.Address = new Uri(consulOption.Address);
+        x.Address = new Uri("http://tokengo.top:8500");
     });
 
     var registration = new AgentServiceRegistration()
     {
         ID = Guid.NewGuid().ToString(),
-        Name = consulOption.ServiceName,
+        Name = "consulOption.ServiceName",
         // Address = serviceName ?? string.Empty,
         Port =  80,
         Check = new AgentCheckRegistration()
         {
-            DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(5),
-            Interval = TimeSpan.FromSeconds(10),
-            // HTTP = "http://" + serviceName + ":" + servicePort + "/health",
-            Timeout = TimeSpan.FromSeconds(5)
+            DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(100),
+            Interval = TimeSpan.FromSeconds(100),
+            HTTP = "http://tokengo.top:8000/health",
+            Timeout = TimeSpan.FromSeconds(100)
         }
     };
 
