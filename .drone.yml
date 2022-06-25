@@ -32,9 +32,6 @@ platform:
 
 steps:
   - name: signalr:dev
-    when:
-      branch:
-        - master
     image: docker:dind
     volumes:
       - name: dockersock
