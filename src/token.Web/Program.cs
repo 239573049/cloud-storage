@@ -30,39 +30,39 @@ builder.Host.AddAppSettingsSecretsJson()
     .UseAutofac()
     .UseSerilog();
 
-builder.Configuration
-    .AddConsul("token", options =>
-    {
-    options.Parser = new SimpleConfigurationParser();
-    options.ConsulConfigurationOptions = cco =>
-    {
-        cco.Address = new Uri("http://consul:8500");
-        options.Optional = true;
-        options.ReloadOnChange = true;
-        options.OnLoadException = exception =>
-        {
-            Console.WriteLine(exception.Exception.Message);
-        };
-        options.ConvertConsulKVPairToConfig = kvPair =>
-        {
-            var normalizedKey = kvPair.Key
-                .Replace("token/", string.Empty)
-                .Replace("__", "/")
-                .Replace("/", ":")
-                .Trim('/');
+//builder.Configuration
+//    .AddConsul("token", options =>
+//    {
+//    options.Parser = new SimpleConfigurationParser();
+//    options.ConsulConfigurationOptions = cco =>
+//    {
+//        cco.Address = new Uri("http://consul:8500");
+//        options.Optional = true;
+//        options.ReloadOnChange = true;
+//        options.OnLoadException = exception =>
+//        {
+//            Console.WriteLine(exception.Exception.Message);
+//        };
+//        options.ConvertConsulKVPairToConfig = kvPair =>
+//        {
+//            var normalizedKey = kvPair.Key
+//                .Replace("token/", string.Empty)
+//                .Replace("__", "/")
+//                .Replace("/", ":")
+//                .Trim('/');
 
-            using Stream valueStream = new MemoryStream(kvPair.Value);
-            using var streamReader = new StreamReader(valueStream);
-            var parsedValue = streamReader.ReadToEnd();
+//            using Stream valueStream = new MemoryStream(kvPair.Value);
+//            using var streamReader = new StreamReader(valueStream);
+//            var parsedValue = streamReader.ReadToEnd();
 
-            return new Dictionary<string, string>()
-            {
-                { normalizedKey, parsedValue }
-            };
-        };
-    };
-    options.ReloadOnChange = true;
-}).Build();
+//            return new Dictionary<string, string>()
+//            {
+//                { normalizedKey, parsedValue }
+//            };
+//        };
+//    };
+//    options.ReloadOnChange = true;
+//}).Build();
 
 
 builder.Services.AddSingleton(Log.Logger);
@@ -73,40 +73,40 @@ await app.InitializeApplicationAsync();
 app.MapControllers();
 
 // 在环境变量获取当前服务的服务名称
-var serviceName = Environment.GetEnvironmentVariable("ServiceName");
-var servicePort = Environment.GetEnvironmentVariable("ServicePort");
+//var serviceName = Environment.GetEnvironmentVariable("ServiceName");
+//var servicePort = Environment.GetEnvironmentVariable("ServicePort");
 
-RegisterConsul(app, app.Configuration, app.Lifetime);
+//RegisterConsul(app, app.Configuration, app.Lifetime);
 
 await app.RunAsync();
-void RegisterConsul(IApplicationBuilder app, IConfiguration configuration, IHostApplicationLifetime lifetime)
-{
-    var configurationSection = configuration.GetSection(ConsulOption.Name);
-    var consulOption = configurationSection.Get<ConsulOption>();
+//void RegisterConsul(IApplicationBuilder app, IConfiguration configuration, IHostApplicationLifetime lifetime)
+//{
+//    var configurationSection = configuration.GetSection(ConsulOption.Name);
+//    var consulOption = configurationSection.Get<ConsulOption>();
 
-    var consulClient = new ConsulClient(x =>
-    {
-        x.Address = new Uri(consulOption.Address);
-    });
+//    var consulClient = new ConsulClient(x =>
+//    {
+//        x.Address = new Uri(consulOption.Address);
+//    });
 
-    var registration = new AgentServiceRegistration()
-    {
-        ID = Guid.NewGuid().ToString(),
-        Name = consulOption.ServiceName,
-        Address = serviceName??string.Empty,
-        Port =string.IsNullOrWhiteSpace(servicePort)?Convert.ToInt32(servicePort):80,
-        Check = new AgentCheckRegistration()
-        {
-            DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(5),
-            Interval = TimeSpan.FromSeconds(10),
-            HTTP = "http://"+serviceName+":"+servicePort+"/health",
-            Timeout = TimeSpan.FromSeconds(5)
-        }
-    };
+//    var registration = new AgentServiceRegistration()
+//    {
+//        ID = Guid.NewGuid().ToString(),
+//        Name = consulOption.ServiceName,
+//        Address = serviceName ?? string.Empty,
+//        Port = string.IsNullOrWhiteSpace(servicePort) ? Convert.ToInt32(servicePort) : 80,
+//        Check = new AgentCheckRegistration()
+//        {
+//            DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(5),
+//            Interval = TimeSpan.FromSeconds(10),
+//            HTTP = "http://" + serviceName + ":" + servicePort + "/health",
+//            Timeout = TimeSpan.FromSeconds(5)
+//        }
+//    };
 
-    consulClient.Agent.ServiceRegister(registration).Wait();
-    lifetime.ApplicationStopping.Register(() =>
-    {
-        consulClient.Agent.ServiceDeregister(registration.ID).Wait();
-    });
-}
+//    consulClient.Agent.ServiceRegister(registration).Wait();
+//    lifetime.ApplicationStopping.Register(() =>
+//    {
+//        consulClient.Agent.ServiceDeregister(registration.ID).Wait();
+//    });
+//}
