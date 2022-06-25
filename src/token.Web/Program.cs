@@ -90,7 +90,7 @@ void RegisterConsul(IApplicationBuilder app, IConfiguration configuration, IHost
     {
         ID = Guid.NewGuid().ToString(),
         Name = "consulOption.ServiceName",
-        // Address = serviceName ?? string.Empty,
+        Address ="http://tokengo.top:8000",
         Port =  80,
         Check = new AgentCheckRegistration()
         {
