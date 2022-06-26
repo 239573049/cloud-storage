@@ -13,9 +13,8 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - docker build -f ./src/token.Web/Dockerfile  -t token:dev .
-      - docker stop token && docker rm token
-      - docker run -d -p 8000:80 -v /root/logs/token/logs:/app/log --network token -e ASPNETCORE_ENVIRONMENT=Development --restart always --name token token:dev
+      - docker build -f ./src/token.Web/Dockerfile -t registry.cn-shenzhen.aliyuncs.com/tokengo/token .
+      - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token
 
 volumes:
   - name: dockersock
