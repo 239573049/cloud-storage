@@ -14,9 +14,9 @@ steps:
         from_secret: docker_username
       PASSWORD:
         from_secret: docker_password
-      token-k3s:
+      TOKEN:
         from_secret: token-k3s
-      signalr-k3s:
+      SIGNALR:
         from_secret: signalr-k3s
     volumes:
       - name: dockersock
@@ -27,8 +27,8 @@ steps:
       - docker login --username=$USERNAME registry.cn-shenzhen.aliyuncs.com --password=$PASSWORD
       - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token:dev
       - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr:dev
-      - $signalr-k3s
-      - $token-k3s
+      - $TOKEN
+      - $SIGNALR
 
 volumes:
   - name: dockersock
