@@ -32,7 +32,7 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
-      
+
 ---
 kind: pipeline
 name: after
@@ -53,4 +53,3 @@ volumes:
       
 depends_on:
    - token
-   - signalr
