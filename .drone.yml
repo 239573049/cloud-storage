@@ -29,7 +29,7 @@ volumes:
 
 ---
 kind: pipeline
-name: token
+name: signalr
 type: docker
 
 platform:
