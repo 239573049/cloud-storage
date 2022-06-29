@@ -1,4 +1,6 @@
-﻿using token.Domain.Shared;
+﻿using token.Application;
+using token.Domain.Shared;
+using token.EntityFrameworkCore;
 using token.HttpApi;
 using token.SignalR.Web.Hubs;
 using Volo.Abp;
@@ -11,6 +13,8 @@ namespace token.SignalR.Web;
 [DependsOn(
     typeof(TokenHttpApiModule),
     typeof(AbpAutofacModule),
+    typeof(TokenEntityFrameworkCoreModule),
+    typeof(TokenApplicationModule),
     typeof(AbpAspNetCoreSerilogModule)
 )]
 public class TokenSignalRWebModule : AbpModule
@@ -25,6 +29,9 @@ public class TokenSignalRWebModule : AbpModule
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         var app = context.GetApplicationBuilder();
-        app.UseEndpoints(x => { x.MapHub<TokenHub>(SignalRConstants.Token); });
+        app.UseEndpoints(x =>
+        {
+            x.MapHub<TokenHub>(SignalRConstants.Token);
+        });
     }
 }

@@ -20,5 +20,12 @@ public static class EntityFreameworkCoreConfig
             x.HasIndex(x => x.Id);
             x.HasKey(x => x.Id);
         });
+
+        builder.Entity<FacilityLogger>(x =>
+        {
+            x.ToTable("facilityLogger");
+
+            x.HasIndex(x => x.FacilityId);
+        });
     }
 }

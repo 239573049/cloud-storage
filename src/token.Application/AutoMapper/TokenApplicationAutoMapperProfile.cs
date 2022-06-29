@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using token.Application.Contracts.AppService;
 using token.Application.Contracts.Version;
 using token.Domain;
 
@@ -10,5 +11,7 @@ public class TokenApplicationAutoMapperProfile : Profile
     {
         CreateMap<AppVersion, AppVersionDto>()
             .ReverseMap();
+
+        CreateMap<FacilityLoggerDto,FacilityLogger>().ReverseMap();
     }
 }

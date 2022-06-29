@@ -18,6 +18,11 @@ public class TokenDbContext : AbpDbContext<TokenDbContext>
     public DbSet<AppVersion> AppVersion { get; set; }
 
     /// <summary>
+    /// 设备
+    /// </summary>
+    public DbSet<FacilityLogger> FacilityLogger { get; set; }
+
+    /// <summary>
     ///     用户
     /// </summary>
     public DbSet<Users> Users { get; set; }

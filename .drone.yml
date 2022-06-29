@@ -9,41 +9,23 @@ platform:
 steps:
   - name: token:dev
     image: docker:dind
+    environment:
+      USERNAME:
+        from_secret: docker_username
+      PASSWORD:
+        from_secret: docker_password
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
     commands:
-      - docker build -f ./src/token.Web/Dockerfile -t registry.cn-shenzhen.aliyuncs.com/tokengo/token .
-      - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token
+      - docker build -f ./src/token.Web/Dockerfile -t registry.cn-shenzhen.aliyuncs.com/tokengo/token:dev .
+      - docker login --username=$USERNAME registry.cn-shenzhen.aliyuncs.com --password=$PASSWORD
+      - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token:dev
 
 volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
-#---
-#kind: pipeline
-#name: signalr
-#type: docker
-#
-#platform:
-#  os: linux
-#  arch: amd64
-#
-#steps:
-#  - name: signalr:dev
-#    image: docker:dind
-#    volumes:
-#      - name: dockersock
-#        path: /var/run/docker.sock
-#    commands:
-#      - docker build -f ./src/SignalR/token.SignalR.Web/Dockerfile  -t signalr:dev .
-#      - docker stop signalr && docker rm signalr
-#      - docker run -d --network token -e ASPNETCORE_ENVIRONMENT=Development -v /root/logs/signalr/logs:/app/logs  --restart always --name signalr signalr:dev
-#
-#volumes:
-#  - name: dockersock
-#    host:
-#      path: /var/run/docker.sock
 
 ---
 kind: pipeline

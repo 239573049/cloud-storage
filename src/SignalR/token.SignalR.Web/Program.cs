@@ -13,7 +13,6 @@ Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
     .ReadFrom.Configuration(new ConfigurationBuilder().AddJsonFile("appsettings.json").AddJsonFile("appsettings.Development.json").Build())
     .WriteTo.Async(c => c.File(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "/log/", "log"), rollingInterval: RollingInterval.Day))
-    .WriteTo.Async(c => c.Console())
     .CreateLogger();
 
 Log.Information("Signalr...");

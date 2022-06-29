@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using token.Domain.Shared;
 using token.SignalR.Web.Hubs;
+using ILogger = Serilog.ILogger;
 
 namespace token.SignalR.Web.Controllers;
 
@@ -13,10 +14,12 @@ namespace token.SignalR.Web.Controllers;
 public class TokenController:ControllerBase
 {
     private readonly IHubContext<TokenHub> _hubContext;
-
-    public TokenController(IHubContext<TokenHub> hubContext)
+    private readonly ILogger _logger;
+    /// <inheritdoc />
+    public TokenController(IHubContext<TokenHub> hubContext, ILogger logger)
     {
         _hubContext = hubContext;
+        _logger = logger;
     }
 
     /// <summary>
@@ -26,18 +29,9 @@ public class TokenController:ControllerBase
     [HttpGet("online-number")]
     public async Task<long> GetOnlineNumberAsync()
     {
+        _logger.Debug("获取在线人数");
         var count=await RedisHelper.GetAsync<long>(SignalRConstants.TokenName);
 
         return count;
-    }
-
-    /// <summary>
-    /// 发送信息至所有用户
-    /// </summary>
-    /// <param name="data"></param>
-    [HttpPost]
-    public async Task SendMessage([FromBody]string data)
-    {
-        await _hubContext.Clients.All.SendAsync(data);
     }
 }

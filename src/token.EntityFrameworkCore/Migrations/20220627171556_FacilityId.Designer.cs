@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using token.EntityFrameworkCore;
 
@@ -10,9 +11,10 @@ using token.EntityFrameworkCore;
 namespace token.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(TokenDbContext))]
-    partial class TokenDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220627171556_FacilityId")]
+    partial class FacilityId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,34 +62,6 @@ namespace token.EntityFrameworkCore.Migrations
                     b.HasIndex("Id");
 
                     b.ToTable("AppVersion", (string)null);
-                });
-
-            modelBuilder.Entity("token.Domain.FacilityLogger", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid?>("CreatorId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("DegreesCelsius")
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("FacilityId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Percent")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FacilityId");
-
-                    b.ToTable("facilityLogger", (string)null);
                 });
 
             modelBuilder.Entity("token.Domain.Users", b =>

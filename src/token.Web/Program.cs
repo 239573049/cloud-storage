@@ -2,7 +2,6 @@ using Consul;
 using Serilog;
 using Serilog.Events;
 using token;
-using token.HttpApi.Module;
 using Winton.Extensions.Configuration.Consul;
 using Winton.Extensions.Configuration.Consul.Parsers;
 
@@ -30,40 +29,40 @@ builder.Host.AddAppSettingsSecretsJson()
     .UseAutofac()
     .UseSerilog();
 
-var consul = Environment.GetEnvironmentVariable("consul");
+var consul = Environment.GetEnvironmentVariable("consul") ?? "http://tokengo.top:8500";
 builder.Configuration
     .AddConsul("token", options =>
     {
-    options.Parser = new SimpleConfigurationParser();
-    options.ConsulConfigurationOptions = cco =>
-    {
-        cco.Address = new Uri(consul);
-        options.Optional = true;
-        options.ReloadOnChange = true;
-        options.OnLoadException = exception =>
+        options.Parser = new SimpleConfigurationParser();
+        options.ConsulConfigurationOptions = cco =>
         {
-            Console.WriteLine(exception.Exception.Message);
-        };
-        options.ConvertConsulKVPairToConfig = kvPair =>
-        {
-            var normalizedKey = kvPair.Key
-                .Replace("token/", string.Empty)
-                .Replace("__", "/")
-                .Replace("/", ":")
-                .Trim('/');
-
-            using Stream valueStream = new MemoryStream(kvPair.Value);
-            using var streamReader = new StreamReader(valueStream);
-            var parsedValue = streamReader.ReadToEnd();
-
-            return new Dictionary<string, string>()
+            cco.Address = new Uri(consul);
+            options.Optional = true;
+            options.ReloadOnChange = true;
+            options.OnLoadException = exception =>
             {
+                Console.WriteLine(exception.Exception.Message);
+            };
+            options.ConvertConsulKVPairToConfig = kvPair =>
+            {
+                var normalizedKey = kvPair.Key
+                    .Replace("token/", string.Empty)
+                    .Replace("__", "/")
+                    .Replace("/", ":")
+                    .Trim('/');
+
+                using Stream valueStream = new MemoryStream(kvPair.Value);
+                using var streamReader = new StreamReader(valueStream);
+                var parsedValue = streamReader.ReadToEnd();
+
+                return new Dictionary<string, string>()
+                {
                 { normalizedKey, parsedValue }
+                };
             };
         };
-    };
-    options.ReloadOnChange = true;
-}).Build();
+        options.ReloadOnChange = true;
+    }).Build();
 
 
 builder.Services.AddSingleton(Log.Logger);
@@ -91,8 +90,8 @@ void RegisterConsul(IApplicationBuilder app, IConfiguration configuration, IHost
     {
         ID = Guid.NewGuid().ToString(),
         Name = "consulOption.ServiceName",
-        Address ="http://tokengo.top:8000",
-        Port =  80,
+        Address = "http://tokengo.top:8000",
+        Port = 80,
         Check = new AgentCheckRegistration()
         {
             DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(100),

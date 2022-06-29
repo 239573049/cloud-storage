@@ -24,12 +24,15 @@
         <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+        <PackageReference Include="Serilog.Sinks.MongoDB" Version="5.1.5" />
         <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="5.2.2" />
         <PackageReference Include="Volo.Abp.Autofac" Version="5.2.2" />
         <PackageReference Include="Volo.Abp.Core" Version="5.2.2" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\token.Application.Contracts\token.Application.Contracts.csproj" />
+      <ProjectReference Include="..\..\token.Application\token.Application.csproj" />
       <ProjectReference Include="..\..\token.HttpApi\token.HttpApi.csproj" />
     </ItemGroup>
 
