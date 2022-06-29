@@ -21,47 +21,18 @@ steps:
         path: /var/run/docker.sock
     commands:
       - docker build -f ./src/token.Web/Dockerfile -t registry.cn-shenzhen.aliyuncs.com/tokengo/token:dev .
+      - docker build -f ./src/SignalR/token.SignalR.Web/Dockerfile -t registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr:dev .
       - docker login --username=$USERNAME registry.cn-shenzhen.aliyuncs.com --password=$PASSWORD
       - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token:dev
+      - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr:dev
+      - $signalr-k3s
       - $token-k3s
 
 volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
-
----
-kind: pipeline
-name: signalr
-type: docker
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-  - name: signalr:dev
-    image: docker:dind
-    environment:
-      USERNAME:
-        from_secret: docker_username
-      PASSWORD:
-        from_secret: docker_password
-      signalr-k3s:
-        from_secret: signalr-k3s
-    volumes:
-      - name: dockersock
-        path: /var/run/docker.sock
-    commands:
-      - docker build -f ./src/SignalR/token.SignalR.Web/Dockerfile -t registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr:dev .
-      - docker login --username=$USERNAME registry.cn-shenzhen.aliyuncs.com --password=$PASSWORD
-      - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr:dev
-      - $signalr-k3s
-volumes:
-  - name: dockersock
-    host:
-      path: /var/run/docker.sock
-
+      
 ---
 kind: pipeline
 name: after
