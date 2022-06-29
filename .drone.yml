@@ -29,6 +29,36 @@ volumes:
 
 ---
 kind: pipeline
+name: token
+type: docker
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: signalr:dev
+    image: docker:dind
+    environment:
+      USERNAME:
+        from_secret: docker_username
+      PASSWORD:
+        from_secret: docker_password
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    commands:
+      - docker build -f ./src/SignalR/token.SignalR.Web/Dockerfile -t registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr:dev .
+      - docker login --username=$USERNAME registry.cn-shenzhen.aliyuncs.com --password=$PASSWORD
+      - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr:dev
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+
+---
+kind: pipeline
 name: after
 type: docker
 
