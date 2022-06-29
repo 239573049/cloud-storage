@@ -44,6 +44,8 @@ steps:
         from_secret: docker_username
       PASSWORD:
         from_secret: docker_password
+      signalr-k3s:
+        from_secret: signalr-k3s
     volumes:
       - name: dockersock
         path: /var/run/docker.sock
@@ -51,7 +53,8 @@ steps:
       - docker build -f ./src/SignalR/token.SignalR.Web/Dockerfile -t registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr:dev .
       - docker login --username=$USERNAME registry.cn-shenzhen.aliyuncs.com --password=$PASSWORD
       - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr:dev
-      - curl -X PUT -H "content-type: application/json" -H "Cookie: KuboardUsername=admin; KuboardAccessKey=izbryrexyfet.cf2bzi27mstj6s3eh5x52n6xyinxyeny" -d '{"kind":"deployments","namespace":"default","name":"web-sginalr","images":{"registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr":"registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr:dev"}}' "http://124.222.27.83:30080/kuboard-api/cluster/default/kind/CICDApi/admin/resource/updateImageTag"
+      - $signalr-k3s
+
 volumes:
   - name: dockersock
     host:
