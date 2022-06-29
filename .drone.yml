@@ -24,6 +24,7 @@ steps:
       - docker login --username=$USERNAME registry.cn-shenzhen.aliyuncs.com --password=$PASSWORD
       - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token:dev
       - $token-k3s
+
 volumes:
   - name: dockersock
     host:
