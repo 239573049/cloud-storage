@@ -1,11 +1,9 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:6.0.3-alpine3.15-amd64 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0.201-alpine3.15-amd64 AS build
 WORKDIR /src
 COPY ["src/SignalR/token.SignalR.Web/token.SignalR.Web.csproj", "src/SignalR/token.SignalR.Web/"]
 COPY ["src/token.Application.Contracts/token.Application.Contracts.csproj", "src/token.Application.Contracts/"]
@@ -17,10 +15,10 @@ COPY ["src/token.Domain.Shared/token.Domain.Shared.csproj", "src/token.Domain.Sh
 RUN dotnet restore "src/SignalR/token.SignalR.Web/token.SignalR.Web.csproj"
 COPY . .
 WORKDIR "/src/src/SignalR/token.SignalR.Web"
-RUN dotnet build "token.SignalR.Web.csproj" -c Release -o /app/build
+RUN dotnet build "token.SignalR.Web.csproj" -c Release --os linux -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "token.SignalR.Web.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "token.SignalR.Web.csproj" -c Release --os linux -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
