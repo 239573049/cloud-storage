@@ -27,7 +27,6 @@ steps:
       - docker login --username=$USERNAME registry.cn-shenzhen.aliyuncs.com --password=$PASSWORD
       - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token:dev
       - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr:dev
-      - yum -y install curl
       - $TOKEN
       - $SIGNALR
 
