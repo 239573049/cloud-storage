@@ -27,10 +27,19 @@ steps:
       - docker login --username=$USERNAME registry.cn-shenzhen.aliyuncs.com --password=$PASSWORD
       - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token:dev
       - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr:dev
-      - cat /proc/version
+
+  - name: k3s
+    image: registry.cn-shenzhen.aliyuncs.com/tokengo/ubuntu
+    environment:
+      TOKEN:
+        from_secret: token-k3s
+      SIGNALR:
+        from_secret: signalr-k3s
+    commands:
       - $TOKEN
       - $SIGNALR
-
+    
+    
 volumes:
   - name: dockersock
     host:
