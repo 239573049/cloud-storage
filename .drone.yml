@@ -88,3 +88,4 @@ volumes:
       
 depends_on:
    - token
+   - signalr
