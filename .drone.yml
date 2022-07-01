@@ -25,7 +25,7 @@ steps:
   - name: token部署到k3s
     image: registry.cn-shenzhen.aliyuncs.com/tokengo/ubuntu
     commands:
-      - "curl -X PUT -H \"content-type: application/json\" -H \"Cookie: KuboardUsername=admin; KuboardAccessKey=izbryrexyfet.cf2bzi27mstj6s3eh5x52n6xyinxyeny\" -d '{\"kind\":\"deployments\",\"namespace\":\"default\",\"name\":\"apt-token\",\"images\":{\"registry.cn-shenzhen.aliyuncs.com/tokengo/token\":\"registry.cn-shenzhen.aliyuncs.com/tokengo/token:dev\"}}' \"http://124.222.27.83:30080/kuboard-api/cluster/default/kind/CICDApi/admin/resource/updateImageTag\""
+      - "curl -X PUT -H \"Content-Type: application/yaml\" -H \"Cookie: KuboardUsername=admin; KuboardAccessKey=izbryrexyfet.cf2bzi27mstj6s3eh5x52n6xyinxyeny\" -d '{\"kind\":\"deployments\",\"namespace\":\"default\",\"name\":\"apt-token\"}' \"http://124.222.27.83:30080/kuboard-api/cluster/default/kind/CICDApi/admin/resource/restartWorkload\""
 
 volumes:
   - name: dockersock
@@ -56,7 +56,7 @@ steps:
   - name: signalr部署到k3s
     image: registry.cn-shenzhen.aliyuncs.com/tokengo/ubuntu
     commands:
-      - "curl -X PUT -H \"content-type: application/json\" -H \"Cookie: KuboardUsername=admin; KuboardAccessKey=izbryrexyfet.cf2bzi27mstj6s3eh5x52n6xyinxyeny\" -d '{\"kind\":\"deployments\",\"namespace\":\"default\",\"name\":\"signalr\",\"images\":{\"registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr\":\"registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr:dev\"}}' \"http://124.222.27.83:30080/kuboard-api/cluster/default/kind/CICDApi/admin/resource/updateImageTag\""
+      - "curl -X PUT -H \"Content-Type: application/yaml\" -H \"Cookie: KuboardUsername=admin; KuboardAccessKey=izbryrexyfet.cf2bzi27mstj6s3eh5x52n6xyinxyeny\" -d '{\"kind\":\"deployments\",\"namespace\":\"default\",\"name\":\"signalr\"}' \"http://124.222.27.83:30080/kuboard-api/cluster/default/kind/CICDApi/admin/resource/restartWorkload\""
 
 volumes:
   - name: dockersock
