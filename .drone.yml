@@ -28,7 +28,7 @@ steps:
       TOKEN:
         from_secret: token-k3s
     commands:
-      - $TOKEN
+      - " curl -X PUT -H \"Content-Type: application/yaml\" -H \"Cookie: KuboardUsername=admin; KuboardAccessKey=izbryrexyfet.cf2bzi27mstj6s3eh5x52n6xyinxyeny\" -d '{\"kind\":\"deployments\",\"namespace\":\"default\",\"name\":\"apt-token\"}' \"http://124.222.27.83:30080/kuboard-api/cluster/default/kind/CICDApi/admin/resource/restartWorkload\" "
     
 volumes:
   - name: dockersock
@@ -62,7 +62,8 @@ steps:
       SIGNALR:
         from_secret: signalr-k3s
     commands:
-      - $SIGNALR
+      - "curl -X PUT -H \"Content-Type: application/yaml\" -H \"Cookie: KuboardUsername=admin; KuboardAccessKey=izbryrexyfet.cf2bzi27mstj6s3eh5x52n6xyinxyeny\"-d '{\"kind\":\"deployments\",\"namespace\":\"default\",\"name\":\"signalr\"}' \"http://124.222.27.83:30080/kuboard-api/cluster/default/kind/CICDApi/admin/resource/restartWorkload\" "
+
 volumes:
   - name: dockersock
     host:
