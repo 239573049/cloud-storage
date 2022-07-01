@@ -14,10 +14,6 @@ steps:
         from_secret: docker_username
       PASSWORD:
         from_secret: docker_password
-      TOKEN:
-        from_secret: token-k3s
-      SIGNALR:
-        from_secret: signalr-k3s
     volumes:
       - name: dockersock
         path: /var/run/docker.sock

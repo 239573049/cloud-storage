@@ -4,17 +4,17 @@ using Volo.Abp.Domain.Entities.Auditing;
 namespace token.Domain;
 
 /// <summary>
-///     用户表
+/// 用户表
 /// </summary>
 public class Users : CreationAuditedEntity<Guid>, ISoftDelete
 {
     /// <summary>
-    ///     账号
+    /// 账号
     /// </summary>
     public string? AccountNumber { get; set; }
 
     /// <summary>
-    ///     密码
+    ///  密码
     /// </summary>
     public string? Password { get; set; }
 
