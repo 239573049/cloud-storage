@@ -24,9 +24,12 @@ steps:
 
   - name: token-k3s
     image: registry.cn-shenzhen.aliyuncs.com/tokengo/ubuntu
+    environment:
+      token:
+        from_secret: token
     commands:
-      - " curl -X PUT -H \"Content-Type: application/yaml\" -H \"Cookie: KuboardUsername=admin; KuboardAccessKey=izbryrexyfet.cf2bzi27mstj6s3eh5x52n6xyinxyeny\" -d '{\"kind\":\"deployments\",\"namespace\":\"default\",\"name\":\"apt-token\"}' \"http://124.222.27.83:30080/kuboard-api/cluster/default/kind/CICDApi/admin/resource/restartWorkload\""
-    
+      - $token
+
 volumes:
   - name: dockersock
     host:
@@ -55,8 +58,11 @@ steps:
 
   - name: signalr-k3s
     image: registry.cn-shenzhen.aliyuncs.com/tokengo/ubuntu
+    environment:
+      signalr:
+        from_secret: signalr
     commands:
-      - "curl -X PUT -H \"Content-Type: application/yaml\" -H \"Cookie: KuboardUsername=admin; KuboardAccessKey=izbryrexyfet.cf2bzi27mstj6s3eh5x52n6xyinxyeny\"-d '{\"kind\":\"deployments\",\"namespace\":\"default\",\"name\":\"signalr\"}' \"http://124.222.27.83:30080/kuboard-api/cluster/default/kind/CICDApi/admin/resource/restartWorkload\" "
+      - $signalr
 
 volumes:
   - name: dockersock
