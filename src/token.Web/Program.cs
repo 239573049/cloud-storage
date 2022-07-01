@@ -29,7 +29,7 @@ builder.Host.AddAppSettingsSecretsJson()
     .UseAutofac()
     .UseSerilog();
 
-var consul = Environment.GetEnvironmentVariable("consul") ?? "http://tokengo.top:8500";
+var consul = Environment.GetEnvironmentVariable("consul") ?? "http://124.222.27.83:8500";
 builder.Configuration
     .AddConsul("token", options =>
     {
@@ -90,13 +90,13 @@ void RegisterConsul(IApplicationBuilder app, IConfiguration configuration, IHost
     {
         ID = Guid.NewGuid().ToString(),
         Name = "consulOption.ServiceName",
-        Address = "http://tokengo.top:8000",
+        Address = "http://124.222.27.83:8000",
         Port = 80,
         Check = new AgentCheckRegistration()
         {
             DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(100),
             Interval = TimeSpan.FromSeconds(100),
-            HTTP = "http://tokengo.top:18888/health",
+            HTTP = "http://124.222.27.83:31005/health",
             Timeout = TimeSpan.FromSeconds(100)
         }
     };
