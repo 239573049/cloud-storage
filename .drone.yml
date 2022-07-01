@@ -37,7 +37,7 @@ volumes:
 
 ---
 kind: pipeline
-name: after
+name: signalr
 type: docker
 
 steps:
