@@ -5,7 +5,7 @@ type: docker
 platform:
   os: linux
   arch: amd64
-  
+
 steps:
   - name: token:dev
     image: docker:dind
@@ -22,7 +22,7 @@ steps:
       - docker login --username=$USERNAME registry.cn-shenzhen.aliyuncs.com --password=$PASSWORD
       - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token:dev
 
-  - name: token-k3s
+  - name: token部署到k3s
     image: registry.cn-shenzhen.aliyuncs.com/tokengo/ubuntu
     environment:
       token:
@@ -56,7 +56,7 @@ steps:
       - docker login --username=$USERNAME registry.cn-shenzhen.aliyuncs.com --password=$PASSWORD
       - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/token-signalr:dev
 
-  - name: signalr-k3s
+  - name: signalr部署到k3s
     image: registry.cn-shenzhen.aliyuncs.com/tokengo/ubuntu
     environment:
       signalr:
@@ -68,13 +68,14 @@ volumes:
   - name: dockersock
     host:
       path: /var/run/docker.sock
+      
 ---
 kind: pipeline
-name: after
+name: 收尾
 type: docker
 
 steps:
-  - name: notify
+  - name: 清楚镜像
     image: docker:dind
     volumes:
       - name: dockersock
