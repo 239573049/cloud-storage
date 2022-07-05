@@ -78,4 +78,21 @@ public class PdfController:ControllerBase
             FileDownloadName = $"{Guid.NewGuid():N}图片转换Pdf.zip"
         };
     }
+
+    /// <summary>
+    /// pdf 转换word (Pdf只支持单文件转换)
+    /// </summary>
+    /// <param name="files"></param>
+    /// <returns></returns>
+    [HttpPost("pdf-to-word")]
+    public async Task<IActionResult> PdfToWordAsync(List<IFormFile> files)
+    {
+        var stream =  files.Select(x=>x.OpenReadStream()).ToList();
+        var result = await _pdfService.PdfToWordAsync(stream);
+        
+        return new FileStreamResult(new MemoryStream(result), FileType.Stream)
+        {
+            FileDownloadName = $"{Guid.NewGuid():N}word转换pdf.zip"
+        };
+    }
 }

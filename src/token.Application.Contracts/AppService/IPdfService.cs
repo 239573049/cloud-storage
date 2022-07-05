@@ -25,4 +25,11 @@ public interface IPdfService
     /// <param name="streams"></param>
     /// <returns></returns>
     Task<byte[]> PdfToImgAsync(List<Stream> streams);
+
+    /// <summary>
+    /// Word转pdf
+    /// </summary>
+    /// <param name="streams"></param>
+    /// <returns></returns>
+    Task<byte[]> PdfToWordAsync(List<Stream> streams);
 }

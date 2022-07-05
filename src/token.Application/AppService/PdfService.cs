@@ -1,14 +1,15 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
-using iText.Html2pdf;
 using iText.IO.Image;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
-using iText.Layout;
+using Spire.Pdf;
 using token.Application.Contracts.AppService;
 using token.Application.Helpers;
 using Volo.Abp.DependencyInjection;
+using Document = iText.Layout.Document;
 using Image = iText.Layout.Element.Image;
+using PdfDocument = iText.Kernel.Pdf.PdfDocument;
 
 namespace token.Application.AppService;
 
@@ -72,7 +73,7 @@ public class PdfService : IPdfService, ISingletonDependency
 
         return resultBytes;
     }
-
+    
     /// <inheritdoc />
     public async Task<byte[]> PdfToImgAsync(List<Stream> streams)
     {
@@ -93,6 +94,26 @@ public class PdfService : IPdfService, ISingletonDependency
             
             emf.Save(memoryStream, ImageFormat.Png);
             dictionary.Add($"{Guid.NewGuid():N}.png",memoryStream);
+        }
+
+        var zip=await _zipUtility.PackageManyZipAsync(dictionary);
+        
+        return await zip.GetAllBytesAsync();
+    }
+    
+    /// <inheritdoc />
+    public async Task<byte[]> PdfToWordAsync(List<Stream> streams)
+    {
+        var dictionary = new Dictionary<string, Stream>();
+        foreach (var s in streams)
+        {
+            var memoryStream = new MemoryStream();
+            var doc = new Spire.Pdf.PdfDocument();
+            doc.LoadFromStream(s);
+            
+            doc.SaveToStream(memoryStream,FileFormat.DOC);
+            
+            dictionary.Add($"{Guid.NewGuid():N}.doc",memoryStream);
         }
 
         var zip=await _zipUtility.PackageManyZipAsync(dictionary);

@@ -1,9 +1,6 @@
-using Consul;
 using Serilog;
 using Serilog.Events;
 using token;
-using Winton.Extensions.Configuration.Consul;
-using Winton.Extensions.Configuration.Consul.Parsers;
 
 Log.Logger = new LoggerConfiguration()
 #if DEBUG

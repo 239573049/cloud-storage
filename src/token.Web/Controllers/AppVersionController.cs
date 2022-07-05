@@ -27,7 +27,7 @@ public class AppVersionController:ControllerBase
     [HttpPost("app-version")]
     public async Task CreateAppVersionAsync(AppVersionDto dto)
     {
-        throw new BusinessException(message:"错误");
+        // throw new BusinessException(message:"错误");
         await _appVersionService.CreateAppVersionAsync(dto);
     }
     
@@ -36,8 +36,8 @@ public class AppVersionController:ControllerBase
     /// </summary>
     /// <param name="keyword"></param>
     /// <returns></returns>
-    [HttpGet("app-version-list/{keyword}")]
-    public async Task<List<AppVersionDto>> GetAppVersionListAsync(string keyword)
+    [HttpGet("app-version-list")]
+    public async Task<List<AppVersionDto>> GetAppVersionListAsync(string? keyword)
     {
         return await _appVersionService.GetAppVersionListAsync(keyword);
     }
@@ -61,5 +61,16 @@ public class AppVersionController:ControllerBase
     public async Task UpdateAppVersionAsync(AppVersionDto dto)
     {
         await _appVersionService.UpdateAppVersionAsync(dto);
+    }
+
+    /// <summary>
+    /// 修改产品更新地址
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="download"></param>
+    [HttpPut("update-download/{id}")]
+    public async Task UpdateDownloadAsync(Guid id, string download)
+    {
+        await _appVersionService.UpdateDownloadAsync(id, download);
     }
 }
