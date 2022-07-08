@@ -1,4 +1,4 @@
-﻿namespace token.Domain;
+﻿namespace token.Domain.Records;
 
 public interface IFacilityLoggerRepository
 {
@@ -7,12 +7,12 @@ public interface IFacilityLoggerRepository
     /// </summary>
     /// <param name="facilityId"></param>
     /// <returns></returns>
-    Task<List<FacilityLogger>> GetFacilityLoggerListAsync(Guid facilityId);
+    Task<List<token.Domain.Records.FacilityLogger>> GetFacilityLoggerListAsync(Guid facilityId);
     
     /// <summary>
     /// 
     /// </summary>
     /// <param name="facilityLogger"></param>
     /// <returns></returns>
-    Task CreateFacilityLoggerAsync(FacilityLogger facilityLogger);
+    Task CreateFacilityLoggerAsync(token.Domain.Records.FacilityLogger facilityLogger);
 }

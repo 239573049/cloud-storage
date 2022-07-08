@@ -11,9 +11,9 @@ namespace token.Application.AppService;
 /// </summary>
 public class FacilityService:ApplicationService,IFacilityService
 {
-    private readonly IFacilityLoggerRepository _facilityLoggerRepository;
+    private readonly token.Domain.Records.IFacilityLoggerRepository _facilityLoggerRepository;
     /// <inheritdoc />
-    public FacilityService(IFacilityLoggerRepository facilityLoggerRepository)
+    public FacilityService(token.Domain.Records.IFacilityLoggerRepository facilityLoggerRepository)
     {
         _facilityLoggerRepository = facilityLoggerRepository;
     }
@@ -21,7 +21,7 @@ public class FacilityService:ApplicationService,IFacilityService
     /// <inheritdoc />
     public async Task CreateFacilityLoggerAsync(FacilityLoggerDto dto)
     {
-        var data = ObjectMapper.Map<FacilityLoggerDto, FacilityLogger>(dto);
+        var data = ObjectMapper.Map<FacilityLoggerDto, token.Domain.Records.FacilityLogger>(dto);
 
         await _facilityLoggerRepository.CreateFacilityLoggerAsync(data);
         
@@ -31,7 +31,7 @@ public class FacilityService:ApplicationService,IFacilityService
     public async Task<List<FacilityLoggerDto>> GetFacilityLoggerListAsync(Guid facilityId)
     {
         var data =await _facilityLoggerRepository.GetFacilityLoggerListAsync(facilityId);
-        var dto = ObjectMapper.Map<List<FacilityLogger>, List<FacilityLoggerDto>>(data);
+        var dto = ObjectMapper.Map<List<token.Domain.Records.FacilityLogger>, List<FacilityLoggerDto>>(data);
 
         return dto;
     }

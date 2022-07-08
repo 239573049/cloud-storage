@@ -20,7 +20,7 @@ public class TokenDbContext : AbpDbContext<TokenDbContext>
     /// <summary>
     /// 设备
     /// </summary>
-    public DbSet<FacilityLogger> FacilityLogger { get; set; }
+    public DbSet<token.Domain.Records.FacilityLogger> FacilityLogger { get; set; }
 
     /// <summary>
     ///     用户

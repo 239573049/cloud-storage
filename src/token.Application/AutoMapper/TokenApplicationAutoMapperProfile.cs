@@ -12,6 +12,6 @@ public class TokenApplicationAutoMapperProfile : Profile
         CreateMap<AppVersion, AppVersionDto>()
             .ReverseMap();
 
-        CreateMap<FacilityLoggerDto,FacilityLogger>().ReverseMap();
+        CreateMap<FacilityLoggerDto,token.Domain.Records.FacilityLogger>().ReverseMap();
     }
 }

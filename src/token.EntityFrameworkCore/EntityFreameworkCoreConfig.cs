@@ -21,21 +21,21 @@ public static class EntityFreameworkCoreConfig
                                        x.HasKey(x => x.Id);
                                    });
 
-        builder.Entity<FacilityLogger>(x =>
-                                       {
-                                           x.ToTable("facilityLogger");
+        builder.Entity<token.Domain.Records.FacilityLogger>(x =>
+                                                            {
+                                                                x.ToTable("facilityLogger");
 
-                                           x.HasIndex(x => x.FacilityId);
-                                       });
+                                                                x.HasIndex(x => x.FacilityId);
+                                                            });
 
-        builder.Entity<WordLogs>(x =>
-                                 {
-                                     x.ToTable(nameof(WordLogs));
-                                     x.HasIndex(x => x.Id);
-                                     x.HasKey(x => x.Id);
+        builder.Entity<token.Domain.Records.WordLogs>(x =>
+                                                      {
+                                                          x.ToTable(nameof(token.Domain.Records.WordLogs));
+                                                          x.HasIndex(x => x.Id);
+                                                          x.HasKey(x => x.Id);
 
-                                     x.HasIndex(x => x.Type);
-                                     x.HasIndex(x => x.Device);
-                                 });
+                                                          x.HasIndex(x => x.Type);
+                                                          x.HasIndex(x => x.Device);
+                                                      });
     }
 }
