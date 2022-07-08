@@ -2,15 +2,18 @@
 using token.Application.Contracts.AppService;
 using token.Domain.Shared;
 using Microsoft.AspNetCore.Http;
-
+using System.Linq.Dynamic.Core;
+using token.Domain.Records;
+using Volo.Abp.Application.Dtos;
+    
 namespace token.Application.AppService;
 
 public class WordLogsService : ApplicationService, IWordLogsService
 {
-    private readonly token.Domain.Records.IWordLogsRepository _wordLogsRepository;
+    private readonly IWordLogsRepository _wordLogsRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public WordLogsService(token.Domain.Records.IWordLogsRepository wordLogsRepository, IHttpContextAccessor httpContextAccessor)
+    public WordLogsService(IWordLogsRepository wordLogsRepository, IHttpContextAccessor httpContextAccessor)
     {
         _wordLogsRepository = wordLogsRepository;
         _httpContextAccessor = httpContextAccessor;
@@ -29,5 +32,18 @@ public class WordLogsService : ApplicationService, IWordLogsService
         };
 
         data = await _wordLogsRepository.InsertAsync(data);
+    }
+
+    public async Task<PagedResultDto<WordLogsDto>> GetWordLogsListAsync(WordLogsInput input)
+    {
+        var count = await _wordLogsRepository.GetCountAsync(input.Type, input.Keywords, input.BeginDateTime,
+                                                            input.EndDateTime);
+
+        var result = await _wordLogsRepository.GetListAsync(input.Type, input.Keywords, input.BeginDateTime,
+                                                            input.EndDateTime, input.SkipCount, input.MaxResultCount);
+
+        var dto = ObjectMapper.Map<List<WordLogs>, List<WordLogsDto>>(result);
+
+        return new PagedResultDto<WordLogsDto>(count,dto);
     }
 }

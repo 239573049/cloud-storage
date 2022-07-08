@@ -2,6 +2,7 @@
 using token.Domain;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
+using token.Domain.Records;
 
 namespace token.EntityFrameworkCore;
 
@@ -20,12 +21,17 @@ public class TokenDbContext : AbpDbContext<TokenDbContext>
     /// <summary>
     /// 设备
     /// </summary>
-    public DbSet<token.Domain.Records.FacilityLogger> FacilityLogger { get; set; }
+    public DbSet<FacilityLogger> FacilityLogger { get; set; }
 
     /// <summary>
     ///     用户
     /// </summary>
     public DbSet<Users> Users { get; set; }
+
+    /// <summary>
+    /// 使用日志
+    /// </summary>
+    public DbSet<WordLogs> WordLogs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
