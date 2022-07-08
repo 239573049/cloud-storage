@@ -15,5 +15,10 @@ public enum WordType
     /// <summary>
     /// PDF转换图片
     /// </summary>
-    PdfToImg
+    PdfToImg,
+    
+    /// <summary>
+    /// PDF转Word
+    /// </summary>
+    PdfToWord
 }

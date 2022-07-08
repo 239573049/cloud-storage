@@ -10,15 +10,18 @@ using Volo.Abp.DependencyInjection;
 using Document = iText.Layout.Document;
 using Image = iText.Layout.Element.Image;
 using PdfDocument = iText.Kernel.Pdf.PdfDocument;
+using token.Domain.Shared;
 
 namespace token.Application.AppService;
 
 public class PdfService : IPdfService, ISingletonDependency
 {
     private readonly ZipUtility _zipUtility;
-    public PdfService(ZipUtility zipUtility)
+    private readonly IWordLogsService _wordLogsService;
+    public PdfService(ZipUtility zipUtility, IWordLogsService wordLogsService)
     {
         _zipUtility = zipUtility;
+        _wordLogsService = wordLogsService;
     }
 
     /// <inheritdoc />
@@ -41,7 +44,7 @@ public class PdfService : IPdfService, ISingletonDependency
         pdfDocument.Close();
 
         streams.ForEach(x => x.Close());
-
+        await _wordLogsService.CreateWordLogsAsync(WordType.MangePdf);
         return await Task.FromResult(memoryStream.ToArray());
     }
 
@@ -71,6 +74,7 @@ public class PdfService : IPdfService, ISingletonDependency
         var resultBytes = memoryStream.GetBuffer();
         memoryStream.Close();
 
+        await _wordLogsService.CreateWordLogsAsync(WordType.ImgToPdf);
         return resultBytes;
     }
     
@@ -97,7 +101,7 @@ public class PdfService : IPdfService, ISingletonDependency
         }
 
         var zip=await _zipUtility.PackageManyZipAsync(dictionary);
-        
+        await _wordLogsService.CreateWordLogsAsync(WordType.PdfToImg);
         return await zip.GetAllBytesAsync();
     }
     
@@ -118,6 +122,7 @@ public class PdfService : IPdfService, ISingletonDependency
 
         var zip=await _zipUtility.PackageManyZipAsync(dictionary);
         
+        await _wordLogsService.CreateWordLogsAsync(WordType.PdfToWord);
         return await zip.GetAllBytesAsync();
     }
 }

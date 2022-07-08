@@ -120,11 +120,48 @@ namespace token.EntityFrameworkCore.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("WxOpenId")
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Id");
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("token.Domain.WordLogs", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Device")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ip")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Device");
+
+                    b.HasIndex("Id");
+
+                    b.HasIndex("Type");
+
+                    b.ToTable("WordLogs", (string)null);
                 });
 #pragma warning restore 612, 618
         }
