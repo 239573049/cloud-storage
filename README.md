@@ -13,3 +13,5 @@
 
 运行项目的时候请先部署mysql和redis服务
 然后更改appsettings.json配置文件
+
+(示例网站Swagger)[http://124.222.27.83:31005/]

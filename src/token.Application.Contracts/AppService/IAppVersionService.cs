@@ -19,7 +19,7 @@ public interface IAppVersionService
     /// </summary>
     /// <param name="keyword"></param>
     /// <returns></returns>
-    Task<List<AppVersionDto>> GetAppVersionListAsync(string keyword);
+    Task<List<AppVersionDto>> GetAppVersionListAsync(string? keyword);
 
     /// <summary>
     ///     通过编号获取版本信息
@@ -34,4 +34,12 @@ public interface IAppVersionService
     /// <param name="dto"></param>
     /// <returns></returns>
     Task UpdateAppVersionAsync(AppVersionDto dto);
+
+    /// <summary>
+    /// 修改更新地址
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="download"></param>
+    /// <returns></returns>
+    Task UpdateDownloadAsync(Guid id, string download);
 }

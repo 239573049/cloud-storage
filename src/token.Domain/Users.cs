@@ -13,6 +13,8 @@ public class Users : CreationAuditedEntity<Guid>, ISoftDelete
     /// </summary>
     public string? AccountNumber { get; set; }
 
+    public string? WxOpenId { get; set; }
+    
     /// <summary>
     ///  密码
     /// </summary>
@@ -33,5 +35,6 @@ public class Users : CreationAuditedEntity<Guid>, ISoftDelete
     /// </summary>
     public string? HeadPortrait { get; set; }
 
+    
     public bool IsDeleted { get; set; }
 }
