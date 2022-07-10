@@ -16,7 +16,7 @@ public class CloudStorageDbContext : AbpDbContext<CloudStorageDbContext>
 
     public DbSet<UserInfo> UserInfo { get; set; }
 
-    public DbSet<Storage> Storage { get; set; }
+    public DbSet<Storage?> Storage { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

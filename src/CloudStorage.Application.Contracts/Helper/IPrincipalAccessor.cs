@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Volo.Abp.Domain.Entities;
 
-namespace CloudStorage.HttpApi;
+namespace CloudStorage.Application.Contracts.Helper;
 
 public interface IPrincipalAccessor
 {

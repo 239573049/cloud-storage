@@ -9,9 +9,4 @@
 3. 仓储使用abp通用仓储
 
 ## 简介
-部署建议使用drone部署，运行指向.drone.yml直接部署
-
-运行项目的时候请先部署mysql和redis服务
-然后更改appsettings.json配置文件
-
-(示例网站Swagger)[http://124.222.27.83:31005/]
+云盘管理系统

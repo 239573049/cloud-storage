@@ -1,9 +1,9 @@
 ﻿using CloudStorage.Application.AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using CloudStorage.Application.Contracts;
+using CloudStorage.Application.Contracts.Helper;
 using CloudStorage.Application.Helpers;
 using CloudStorage.EntityFrameworkCore;
-using CloudStorage.HttpApi;
 using Microsoft.AspNetCore.Http;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;

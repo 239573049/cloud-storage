@@ -45,5 +45,5 @@ public class Storage: AggregateRoot<Guid>, ISoftDelete, IHasCreationTime
     
     public bool IsDeleted { get; set; }
     
-    public DateTime CreationTime { get; }
+    public DateTime CreationTime { get; set; }
 }

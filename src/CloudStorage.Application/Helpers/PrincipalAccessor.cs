@@ -1,9 +1,9 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using CloudStorage.Application.Contracts.Helper;
 using CloudStorage.Application.Modules;
 using CloudStorage.Domain.Shared;
-using CloudStorage.HttpApi;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

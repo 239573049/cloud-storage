@@ -32,4 +32,25 @@ public class StorageController : ControllerBase
 
         return dto;
     }
+
+    /// <summary>
+    /// 获取云盘列表
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    [HttpGet("storage-list")]
+    public async Task<List<StorageDto>> GetStorageListAsync([FromQuery]GetStorageListInput input)
+    {
+        return await _storageService.GetStorageListAsync(input);
+    }
+
+    /// <summary>
+    /// 获取最新的文件
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("newest-file")]
+    public async Task<StorageDto> GetNewestFile()
+    {
+        return await _storageService.GetNewestFile();
+    }
 }
