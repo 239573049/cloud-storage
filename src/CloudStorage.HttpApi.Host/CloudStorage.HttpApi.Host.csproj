@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>token</RootNamespace>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>5edb7cc9-8b61-4ce9-a1da-b0b0cd81fe88</UserSecretsId>
+        <DockerfileContext>..\..</DockerfileContext>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
+        <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+        <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+        <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="5.3.2" />
+        <PackageReference Include="Volo.Abp.Autofac" Version="5.3.2" />
+        <PackageReference Include="Volo.Abp.Core" Version="5.3.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\CloudStorage.Application\CloudStorage.Application.csproj" />
+        <ProjectReference Include="..\CloudStorage.HttpApi\CloudStorage.HttpApi.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="PdfRenderer\vcruntime140.dll" />
+      <None Remove="PdfRenderer\vcomp140.dll" />
+      <None Remove="PdfRenderer\vccorlib140.dll" />
+      <None Remove="PdfRenderer\ucrtbase.dll" />
+      <None Remove="PdfRenderer\libcurl.dll" />
+      <None Remove="PdfRenderer\api-ms-win-crt-math-l1-1-0.dll" />
+      <None Remove="PdfRenderer\api-ms-win-core-util-l1-1-0.dll" />
+      <None Remove="PdfRenderer\api-ms-win-core-timezone-l1-1-0.dll" />
+      <None Remove="PdfRenderer\api-ms-win-core-processthreads-l1-1-1.dll" />
+      <None Remove="PdfRenderer\api-ms-win-core-processenvironment-l1-1-0.dll" />
+      <None Remove="PdfRenderer\api-ms-win-core-libraryloader-l1-1-0.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwoot\CloudStorage" />
+    </ItemGroup>
+
+</Project>
