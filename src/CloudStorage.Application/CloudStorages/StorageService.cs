@@ -20,15 +20,17 @@ public class StorageService : ApplicationService, IStorageService
     private readonly IPrincipalAccessor _principalAccessor;
     private readonly IUserInfoRepository _userInfoRepository;
     private readonly FileHelper _fileHelper;
+    private readonly NameSuffix _nameSuffix;
 
     /// <inheritdoc />
     public StorageService(IStorageRepository storageRepository, IPrincipalAccessor principalAccessor,
-        IUserInfoRepository userInfoRepository, FileHelper fileHelper)
+        IUserInfoRepository userInfoRepository, FileHelper fileHelper, NameSuffix nameSuffix)
     {
         _storageRepository = storageRepository;
         _principalAccessor = principalAccessor;
         _userInfoRepository = userInfoRepository;
         _fileHelper = fileHelper;
+        _nameSuffix = nameSuffix;
     }
 
 
@@ -75,12 +77,22 @@ public class StorageService : ApplicationService, IStorageService
         return dto;
     }
 
-    public async Task<StorageDto> GetNewestFile()
+    public async Task<GetNewestStorageDto> GetNewestFile()
     {
         var userId = _principalAccessor.UserId();
 
         var storage =await _storageRepository.GetNewestFileAsync(userId);
 
-        return ObjectMapper.Map<Storage, StorageDto>(storage);
+        var newestStorage = new GetNewestStorageDto()
+        {
+            Id = storage.Id,
+            FileName = storage.Path,
+            Message = "最近的上传的文件",
+            CreationTime = storage.CreationTime,
+            Title = "最近文件",
+            Icon =await _nameSuffix.GetIconAsync(storage.Path)
+        };
+        
+        return newestStorage;
     }
 }

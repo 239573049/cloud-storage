@@ -13,6 +13,7 @@ public class AuthenticationController : ControllerBase
 {
     private readonly IUserInfoService _userInfoService;
 
+    /// <inheritdoc />
     public AuthenticationController(IUserInfoService userInfoService)
     {
         _userInfoService = userInfoService;

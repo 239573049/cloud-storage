@@ -24,5 +24,5 @@ public interface IStorageService
     /// 获取最新的文件
     /// </summary>
     /// <returns></returns>
-    Task<StorageDto> GetNewestFile();
+    Task<GetNewestStorageDto> GetNewestFile();
 }

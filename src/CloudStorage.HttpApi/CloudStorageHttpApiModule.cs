@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using CloudStorage.Application.Helpers;
 using CloudStorage.Application.Modules;
 using CloudStorage.HttpApi.filters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,7 +17,7 @@ namespace CloudStorage.HttpApi;
 
 public class CloudStorageHttpApiModule : AbpModule
 {
-    public override void ConfigureServices(ServiceConfigurationContext context)
+    public override async Task ConfigureServicesAsync(ServiceConfigurationContext context)
     {
         if (!Directory.Exists(CloudStorageExtension.CloudStorageRoot()))
         {
@@ -25,7 +26,7 @@ public class CloudStorageHttpApiModule : AbpModule
         
         ConfigureAuthentication(context, context.Services.GetConfiguration());
         ConfigureCors(context, context.Services.GetConfiguration());
-        ConfigureRedis(context);
+        await ConfigureRedis(context);
         ConfigureSwaggerServices(context);
         ConfigurationMvc(context);
     }
@@ -85,10 +86,11 @@ public class CloudStorageHttpApiModule : AbpModule
         });
     }
 
-    private static void ConfigureRedis(ServiceConfigurationContext context)
+    private static async Task ConfigureRedis(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration()["Redis:Configuration"];
         RedisHelper.Initialization(new CSRedis.CSRedisClient(configuration));
+        await NameSuffix.SetIconAsync();
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)

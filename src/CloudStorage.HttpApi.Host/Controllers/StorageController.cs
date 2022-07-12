@@ -49,7 +49,7 @@ public class StorageController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet("newest-file")]
-    public async Task<StorageDto> GetNewestFile()
+    public async Task<GetNewestStorageDto> GetNewestFile()
     {
         return await _storageService.GetNewestFile();
     }
