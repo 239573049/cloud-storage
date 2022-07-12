@@ -19,9 +19,9 @@ public class CloudStorageHttpApiModule : AbpModule
 {
     public override async Task ConfigureServicesAsync(ServiceConfigurationContext context)
     {
-        if (!Directory.Exists(CloudStorageExtension.CloudStorageRoot()))
+        if (!Directory.Exists(Constants.CloudStorageRoot))
         {
-            Directory.CreateDirectory(CloudStorageExtension.CloudStorageRoot());
+            Directory.CreateDirectory(Constants.CloudStorageRoot);
         }
         
         ConfigureAuthentication(context, context.Services.GetConfiguration());

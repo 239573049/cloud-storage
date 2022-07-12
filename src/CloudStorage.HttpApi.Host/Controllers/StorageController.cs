@@ -1,6 +1,7 @@
 using CloudStorage.Application.Contracts.CloudStorages;
 using CloudStorage.Application.Contracts.CloudStorages.Views;
 using Microsoft.AspNetCore.Mvc;
+using Volo.Abp.Application.Dtos;
 
 namespace token.Controllers;
 
@@ -39,7 +40,7 @@ public class StorageController : ControllerBase
     /// <param name="input"></param>
     /// <returns></returns>
     [HttpGet("storage-list")]
-    public async Task<List<StorageDto>> GetStorageListAsync([FromQuery]GetStorageListInput input)
+    public async Task<PagedResultDto<StorageDto>> GetStorageListAsync([FromQuery]GetStorageListInput input)
     {
         return await _storageService.GetStorageListAsync(input);
     }
@@ -52,5 +53,15 @@ public class StorageController : ControllerBase
     public async Task<GetNewestStorageDto> GetNewestFile()
     {
         return await _storageService.GetNewestFile();
+    }
+
+    /// <summary>
+    /// 新建文件夹
+    /// </summary>
+    /// <param name="input"></param>
+    [HttpPost("directory")]
+    public async Task CreateDirectoryAsync(CreateDirectoryInput input)
+    {
+        await _storageService.CreateDirectoryAsync(input);
     }
 }

@@ -24,4 +24,9 @@ public enum FileFormatType
     /// 文档
     /// </summary>
     Word,
+    
+    /// <summary>
+    /// 文件夹
+    /// </summary>
+    Directory
 }

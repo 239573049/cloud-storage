@@ -44,7 +44,7 @@ public static class CloudStorageEntityFreameworkCoreExtension
             Name = "admin",
             Password = "admin",
             Status = UserStatus.Normal,
-            CloudStorageRoot =Path.Combine( CloudStorageExtension.CloudStorageRoot(),"admin"),
+            CloudStorageRoot =Path.Combine(Constants.CloudStorageRoot, Guid.NewGuid().ToString("N")),
             Sex = SexType.None
         };
         

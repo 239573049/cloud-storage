@@ -19,6 +19,11 @@ public class AuthenticationController : ControllerBase
         _userInfoService = userInfoService;
     }
 
+    /// <summary>
+    /// 登录
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
     [HttpPost("login")]
     public async Task<string> LoginAsync(CreateTokenInput input)
     {

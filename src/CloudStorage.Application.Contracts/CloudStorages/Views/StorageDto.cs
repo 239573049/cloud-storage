@@ -39,5 +39,10 @@ public class StorageDto : AggregateRoot<Guid>, IHasCreationTime
     /// </summary>
     public Guid UserInfoId { get; set; }
 
-    public DateTime CreationTime { get; }
+    /// <summary>
+    /// 图标显示
+    /// </summary>
+    public string? Icon { get; set; }
+    
+    public DateTime CreationTime { get; set; }
 }

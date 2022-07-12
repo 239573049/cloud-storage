@@ -13,9 +13,15 @@ public class FileHelper : ISingletonDependency
     /// </summary>
     /// <param name="stream"></param>
     /// <param name="path"></param>
-    public async Task SaveFileAsync(Stream stream, string path)
+    /// <param name="fileName"></param>
+    public async Task SaveFileAsync(Stream stream, string path, string fileName)
     {
-        var fileStream = File.Create(path);
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+        
+        var fileStream = File.Create(Path.Combine(path,fileName));
         await stream.CopyToAsync(fileStream);
         fileStream.Close();
         stream.Close();

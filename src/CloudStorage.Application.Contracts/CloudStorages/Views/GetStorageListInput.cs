@@ -1,9 +1,11 @@
+using token.Domain;
+
 namespace CloudStorage.Application.Contracts.CloudStorages.Views;
 
 /// <summary>
 /// 获取云盘列表
 /// </summary>
-public class GetStorageListInput
+public class GetStorageListInput :PagedRequestDto
 {
     /// <summary>
     /// 搜索
