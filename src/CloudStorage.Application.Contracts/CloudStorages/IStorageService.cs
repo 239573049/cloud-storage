@@ -4,6 +4,9 @@ using Volo.Abp.Application.Dtos;
 
 namespace CloudStorage.Application.Contracts.CloudStorages;
 
+/// <summary>
+/// 
+/// </summary>
 public interface IStorageService
 {
     /// <summary>
