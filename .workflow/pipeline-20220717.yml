@@ -1,0 +1,48 @@
+version: '1.0'
+name: pipeline-20220717
+displayName: pipeline-20220717
+triggers:
+  trigger: auto
+  push:
+    branches:
+      prefix:
+        - ''
+stages:
+  - name: stage-459f5fea
+    displayName: 未命名
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: build@docker
+        name: build_docker
+        displayName: 镜像构建
+        type: cert
+        certificate: 991f3ac0-e808-013a-41a5-5e74978c3f64
+        tag: registry.cn-shenzhen.aliyuncs.com/tokengo/cloud-storage:${GITEE_PIPELINE_BUILD_NUMBER}
+        dockerfile: ./src/CloudStorage.HttpApi/Dockerfile
+        context: null
+        artifacts: []
+        isCache: false
+        notify: []
+        strategy:
+          retry: '0'
+  - name: stage-072b22d1
+    displayName: 未命名
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: execute@docker
+        name: execute_by_docker
+        displayName: 基于镜像的脚本执行
+        certificate: 991f3ac0-e808-013a-41a5-5e74978c3f64
+        image: registry.cn-shenzhen.aliyuncs.com/tokengo/ubuntu
+        command:
+          - 'curl -X PUT -H \"Content-Type: application/yaml\" -H \"Cookie: KuboardUsername=admin; KuboardAccessKey=izbryrexyfet.cf2bzi27mstj6s3eh5x52n6xyinxyeny\" -d ''{\"kind\":\"deployments\",\"namespace\":\"default\",\"name\":\"cloud-storage\"}'' \"http://124.222.27.83:30080/kuboard-api/cluster/default/kind/CICDApi/admin/resource/restartWorkload\"'
+        notify: []
+        strategy:
+          retry: '0'
+permissions:
+  - role: admin
+    members: []
