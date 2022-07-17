@@ -13,4 +13,4 @@
 建议的个人云盘管理系统
 
 ## 客户端
-(MAUI Blazor客户端)[https://github.com/239573049/cloud-storage-client]
+[MAUI Blazor客户端](https://github.com/239573049/cloud-storage-client)
