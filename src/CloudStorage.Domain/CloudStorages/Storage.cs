@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using CloudStorage.Domain.Shared;
 using CloudStorage.Domain.Users;
 using Volo.Abp;
@@ -40,6 +41,18 @@ public class Storage: AggregateRoot<Guid>, ISoftDelete, IHasCreationTime
     /// 用户id
     /// </summary>
     public Guid UserInfoId { get; set; }
+
+    /// <summary>
+    /// 云盘下载路径
+    /// </summary>
+    [NotMapped]
+    public string CloudUrl
+    {
+        get
+        {
+            return StoragePath?.Replace(Constants.CloudStorageWWWROOT, "").Replace("\\","/");
+        }
+    }
 
     public virtual UserInfo UserInfo { get; set; }
     

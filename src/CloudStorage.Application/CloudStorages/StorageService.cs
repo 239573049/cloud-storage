@@ -70,6 +70,42 @@ public class StorageService : ApplicationService, IStorageService
         return ObjectMapper.Map<Storage, StorageDto>(data);
     }
 
+    public async Task UploadFileListAsync(List<IFormFile> files, Guid? storageId = null)
+    {
+        var userId = _principalAccessor.UserId();
+
+        if (storageId != null)
+        {
+            var storage = await _storageRepository.FirstOrDefaultAsync(x => x.Id == storageId);
+            if (storage == null)
+            {
+                throw new BusinessException(message: "不存在上级文件夹");
+            }
+        }
+
+        var user = await _userInfoRepository.FirstOrDefaultAsync(x => x.Id == userId);
+
+        foreach (var file in files)
+        {
+            var fileName = Guid.NewGuid().ToString("N") + file.FileName;
+            var path = user.CloudStorageRoot;
+            var data = new Storage()
+            {
+                Path = file.FileName,
+                StorageId = storageId,
+                UserInfoId = userId,
+                Length = file.Length,
+                Type = StorageType.File,
+                StoragePath = Path.Combine(path, fileName)
+            };
+
+            data = await _storageRepository.InsertAsync(data, true);
+
+            await _fileHelper.SaveFileAsync(file.OpenReadStream(), path, fileName);
+        }
+
+    }
+
     public async Task CreateDirectoryAsync(CreateDirectoryInput input)
     {
         var user = _principalAccessor.UserId();

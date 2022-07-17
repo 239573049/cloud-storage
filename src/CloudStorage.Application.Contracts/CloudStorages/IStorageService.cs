@@ -15,6 +15,14 @@ public interface IStorageService
     Task<StorageDto> UploadFilesAsync(IFormFile file, Guid? storageId = null);
 
     /// <summary>
+    /// 批量新增文件
+    /// </summary>
+    /// <param name="files"></param>
+    /// <param name="storageId"></param>
+    /// <returns></returns>
+    Task UploadFileListAsync(List<IFormFile> files,Guid? storageId = null);
+    
+    /// <summary>
     /// 新建文件夹
     /// </summary>
     /// <param name="input"></param>

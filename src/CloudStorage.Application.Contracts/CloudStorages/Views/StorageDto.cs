@@ -43,6 +43,11 @@ public class StorageDto : AggregateRoot<Guid>, IHasCreationTime
     /// 图标显示
     /// </summary>
     public string? Icon { get; set; }
+
+    /// <summary>
+    /// url
+    /// </summary>
+    public string? CloudUrl { get; set; }
     
     public DateTime CreationTime { get; set; }
 }

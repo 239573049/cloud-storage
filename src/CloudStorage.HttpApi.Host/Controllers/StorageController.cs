@@ -35,6 +35,17 @@ public class StorageController : ControllerBase
     }
 
     /// <summary>
+    /// 批量上传文件
+    /// </summary>
+    /// <param name="files"></param>
+    /// <param name="storageId"></param>
+    [HttpPost("upload-file-list")]
+    public async Task UploadFileListAsync(List<IFormFile> files, Guid? storageId = null)
+    {
+        await _storageService.UploadFileListAsync(files, storageId);
+    }
+    
+    /// <summary>
     /// 获取云盘列表
     /// </summary>
     /// <param name="input"></param>

@@ -31,6 +31,8 @@ public class Constants
     /// <summary>
     /// 云盘存放路径
     /// </summary>
-    public const string CloudStorageRoot = "./wwwroot/CloudStorage";
+    public const string CloudStorageRoot = CloudStorageWWWROOT+"/CloudStorage";
+
+    public const string CloudStorageWWWROOT = "./wwwroot";
 
 }

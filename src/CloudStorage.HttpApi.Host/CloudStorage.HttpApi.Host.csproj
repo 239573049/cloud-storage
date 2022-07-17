@@ -46,8 +46,4 @@
       <None Remove="PdfRenderer\api-ms-win-core-libraryloader-l1-1-0.dll" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="wwwoot\CloudStorage" />
-    </ItemGroup>
-
 </Project>
