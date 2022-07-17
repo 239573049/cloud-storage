@@ -23,10 +23,10 @@ steps:
       - docker login --username=$USERNAME registry.cn-shenzhen.aliyuncs.com --password=$PASSWORD
       - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/cloud-storage:dev
  
-#  - name: token部署到k3s
-#    image: registry.cn-shenzhen.aliyuncs.com/tokengo/ubuntu
-#    commands:
-#      - "curl -X PUT -H \"Content-Type: application/yaml\" -H \"Cookie: KuboardUsername=admin; KuboardAccessKey=izbryrexyfet.cf2bzi27mstj6s3eh5x52n6xyinxyeny\" -d '{\"kind\":\"deployments\",\"namespace\":\"default\",\"name\":\"apt-token\"}' \"http://124.222.27.83:30080/kuboard-api/cluster/default/kind/CICDApi/admin/resource/restartWorkload\""
+  - name: token部署到k3s
+    image: registry.cn-shenzhen.aliyuncs.com/tokengo/ubuntu
+    commands:
+      - "curl -X PUT -H \"Content-Type: application/yaml\" -H \"Cookie: KuboardUsername=admin; KuboardAccessKey=izbryrexyfet.cf2bzi27mstj6s3eh5x52n6xyinxyeny\" -d '{\"kind\":\"deployments\",\"namespace\":\"default\",\"name\":\"cloud-storage\"}' \"http://124.222.27.83:30080/kuboard-api/cluster/default/kind/CICDApi/admin/resource/restartWorkload\""
 
 volumes:
   - name: dockersock
