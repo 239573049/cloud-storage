@@ -29,7 +29,12 @@ public class StorageController : ControllerBase
     [HttpPost("upload-file")]
     public async Task<StorageDto> UploadFilesAsync(IFormFile file,[FromQuery]Guid? storageId = null)
     {
-        var dto = await _storageService.UploadFilesAsync(file, storageId);
+        var dto = await _storageService.UploadFilesAsync(new UploadFileInput()
+        {
+            Length = file.Length,
+            Name = file.Name,
+            Stream = file.OpenReadStream()
+        }, storageId);
 
         return dto;
     }
@@ -42,7 +47,14 @@ public class StorageController : ControllerBase
     [HttpPost("upload-file-list")]
     public async Task UploadFileListAsync(List<IFormFile> files, Guid? storageId = null)
     {
-        await _storageService.UploadFileListAsync(files, storageId);
+        var data = files.Select(x => new UploadFileInput
+        {
+            Length = x.Length,
+            Stream = x.OpenReadStream(),
+            Name = x.FileName
+        }).ToList();
+        
+        await _storageService.UploadFileListAsync(data, storageId);
     }
     
     /// <summary>

@@ -5,7 +5,6 @@ using CloudStorage.Application.Helpers;
 using CloudStorage.Domain.CloudStorages;
 using CloudStorage.Domain.Shared;
 using CloudStorage.Domain.Users;
-using Microsoft.AspNetCore.Http;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
@@ -36,7 +35,7 @@ public class StorageService : ApplicationService, IStorageService
     }
 
 
-    public async Task<StorageDto> UploadFilesAsync(IFormFile file, Guid? storageId = null)
+    public async Task<StorageDto> UploadFilesAsync(UploadFileInput input, Guid? storageId = null)
     {
         var userId = _principalAccessor.UserId();
 
@@ -51,26 +50,26 @@ public class StorageService : ApplicationService, IStorageService
 
         var user = await _userInfoRepository.FirstOrDefaultAsync(x => x.Id == userId);
 
-        var fileName = Guid.NewGuid().ToString("N") + file.FileName;
+        var fileName = Guid.NewGuid().ToString("N") + input.Name;
         var path = user.CloudStorageRoot;
         var data = new Storage()
         {
-            Path = file.FileName,
+            Path = input.Name,
             StorageId = storageId,
             UserInfoId = userId,
-            Length = file.Length,
+            Length = input.Length,
             Type = StorageType.File,
             StoragePath = Path.Combine(path, fileName)
         };
 
         data = await _storageRepository.InsertAsync(data, true);
 
-        await _fileHelper.SaveFileAsync(file.OpenReadStream(), path, fileName);
+        await _fileHelper.SaveFileAsync(input.Stream, path, fileName);
 
         return ObjectMapper.Map<Storage, StorageDto>(data);
     }
 
-    public async Task UploadFileListAsync(List<IFormFile> files, Guid? storageId = null)
+    public async Task UploadFileListAsync(List<UploadFileInput> files, Guid? storageId = null)
     {
         var userId = _principalAccessor.UserId();
 
@@ -87,11 +86,11 @@ public class StorageService : ApplicationService, IStorageService
 
         foreach (var file in files)
         {
-            var fileName = Guid.NewGuid().ToString("N") + file.FileName;
+            var fileName = Guid.NewGuid().ToString("N") + file.Name;
             var path = user.CloudStorageRoot;
             var data = new Storage()
             {
-                Path = file.FileName,
+                Path = file.Name,
                 StorageId = storageId,
                 UserInfoId = userId,
                 Length = file.Length,
@@ -101,7 +100,7 @@ public class StorageService : ApplicationService, IStorageService
 
             data = await _storageRepository.InsertAsync(data, true);
 
-            await _fileHelper.SaveFileAsync(file.OpenReadStream(), path, fileName);
+            await _fileHelper.SaveFileAsync(file.Stream, path, fileName);
         }
 
     }

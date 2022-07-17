@@ -1,5 +1,4 @@
 using CloudStorage.Application.Contracts.CloudStorages.Views;
-using Microsoft.AspNetCore.Http;
 using Volo.Abp.Application.Dtos;
 
 namespace CloudStorage.Application.Contracts.CloudStorages;
@@ -12,10 +11,10 @@ public interface IStorageService
     /// <summary>
     /// 新增文件
     /// </summary>
-    /// <param name="file"></param>
+    /// <param name="input"></param>
     /// <param name="storageId"></param>
     /// <returns></returns>
-    Task<StorageDto> UploadFilesAsync(IFormFile file, Guid? storageId = null);
+    Task<StorageDto> UploadFilesAsync(UploadFileInput input, Guid? storageId = null);
 
     /// <summary>
     /// 批量新增文件
@@ -23,7 +22,7 @@ public interface IStorageService
     /// <param name="files"></param>
     /// <param name="storageId"></param>
     /// <returns></returns>
-    Task UploadFileListAsync(List<IFormFile> files,Guid? storageId = null);
+    Task UploadFileListAsync(List<UploadFileInput> files, Guid? storageId = null);
     
     /// <summary>
     /// 新建文件夹
