@@ -20,7 +20,7 @@ steps:
         
     commands:
       - docker build -f ./src/CloudStorage.HttpApi.Host/Dockerfile -t registry.cn-shenzhen.aliyuncs.com/tokengo/cloud-storage:dev .
-      - docker login --username=小虎数据管理 registry.cn-shenzhen.aliyuncs.com --password=$PASSWORD
+      - docker login --username=$USERNAME registry.cn-shenzhen.aliyuncs.com --password=$PASSWORD
       - docker push registry.cn-shenzhen.aliyuncs.com/tokengo/cloud-storage:dev
  
 #  - name: token部署到k3s
