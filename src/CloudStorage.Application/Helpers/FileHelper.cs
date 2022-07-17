@@ -26,4 +26,23 @@ public class FileHelper : ISingletonDependency
         fileStream.Close();
         stream.Close();
     }
+    
+    /// <summary>
+    /// 保存文件到本地
+    /// </summary>
+    /// <param name="bytes"></param>
+    /// <param name="path"></param>
+    /// <param name="fileName"></param>
+    public async Task SaveFileAsync(byte[]? bytes, string path, string fileName)
+    {
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+        
+        var fileStream = File.Create(Path.Combine(path,fileName));
+        await fileStream.WriteAsync(bytes);
+        fileStream.Close();
+        bytes=null;
+    }
 }

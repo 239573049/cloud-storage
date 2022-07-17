@@ -64,7 +64,7 @@ public class StorageService : ApplicationService, IStorageService
 
         data = await _storageRepository.InsertAsync(data, true);
 
-        await _fileHelper.SaveFileAsync(input.Stream, path, fileName);
+        await _fileHelper.SaveFileAsync(input.Bytes, path, fileName);
 
         return ObjectMapper.Map<Storage, StorageDto>(data);
     }
@@ -100,7 +100,7 @@ public class StorageService : ApplicationService, IStorageService
 
             data = await _storageRepository.InsertAsync(data, true);
 
-            await _fileHelper.SaveFileAsync(file.Stream, path, fileName);
+            await _fileHelper.SaveFileAsync(file.Bytes, path, fileName);
         }
 
     }

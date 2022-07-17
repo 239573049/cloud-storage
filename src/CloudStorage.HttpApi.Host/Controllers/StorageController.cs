@@ -33,7 +33,7 @@ public class StorageController : ControllerBase
         {
             Length = file.Length,
             Name = file.Name,
-            Stream = file.OpenReadStream()
+            Bytes =await file.OpenReadStream().GetAllBytesAsync()
         }, storageId);
 
         return dto;
@@ -47,10 +47,10 @@ public class StorageController : ControllerBase
     [HttpPost("upload-file-list")]
     public async Task UploadFileListAsync(List<IFormFile> files, Guid? storageId = null)
     {
-        var data = files.Select(x => new UploadFileInput
+        var data = files.Select( x => new UploadFileInput
         {
             Length = x.Length,
-            Stream = x.OpenReadStream(),
+            Bytes = x.OpenReadStream().GetAllBytes(),
             Name = x.FileName
         }).ToList();
         

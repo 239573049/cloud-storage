@@ -2,7 +2,7 @@ namespace CloudStorage.Application.Contracts.CloudStorages.Views;
 
 public class UploadFileInput
 {
-    public Stream Stream { get; set; }
+    public byte[] Bytes { get; set; }
 
     public long Length { get; set; }
 
