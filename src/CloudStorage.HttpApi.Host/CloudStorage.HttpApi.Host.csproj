@@ -46,4 +46,12 @@
       <None Remove="PdfRenderer\api-ms-win-core-libraryloader-l1-1-0.dll" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\CloudStorage\5b7dfe55651e46eb8484de55eb13b1dd\e99b44bd3fb64b7885faaa41796243afvideo.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\CloudStorage" />
+    </ItemGroup>
+
 </Project>
