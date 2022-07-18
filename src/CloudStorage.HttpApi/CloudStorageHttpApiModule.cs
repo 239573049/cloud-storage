@@ -13,7 +13,6 @@ using NSwag;
 using NSwag.Generation.Processors.Security;
 using Volo.Abp;
 using Volo.Abp.Modularity;
-using OpenApiSecurityScheme = Microsoft.OpenApi.Models.OpenApiSecurityScheme;
 
 namespace CloudStorage.HttpApi;
 

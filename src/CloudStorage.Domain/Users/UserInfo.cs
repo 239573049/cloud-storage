@@ -1,4 +1,5 @@
 using CloudStorage.Domain.Shared;
+using Microsoft.Extensions.Primitives;
 using Volo.Abp;
 using Volo.Abp.Auditing;
 using Volo.Abp.Domain.Entities;
@@ -38,7 +39,7 @@ public class UserInfo : AggregateRoot<Guid>, ISoftDelete, IHasCreationTime
     /// <summary>
     /// 头像
     /// </summary>
-    public string? HeadPortraits  { get; set; }
+    public string? HeadPortraits { get; set; }
 
     /// <summary>
     /// 性别
@@ -50,11 +51,17 @@ public class UserInfo : AggregateRoot<Guid>, ISoftDelete, IHasCreationTime
     /// </summary>
     public UserStatus Status { get; set; }
 
+    private string? _cloudStorageRoot;
+
     /// <summary>
     /// 服务器文件
     /// </summary>
-    public string? CloudStorageRoot { get; set; }
-    
+    public string? CloudStorageRoot
+    {
+        get { return _cloudStorageRoot; }
+        set { _cloudStorageRoot = Path.Join(Constants.CloudStorageRoot, value); }
+    }
+
     public bool IsDeleted { get; set; }
 
     public DateTime CreationTime { get; }

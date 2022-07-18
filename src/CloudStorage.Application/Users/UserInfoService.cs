@@ -30,7 +30,7 @@ public class UserInfoService : ApplicationService, IUserInfoService
         
         
         var data = ObjectMapper.Map<UserInfoDto, UserInfo>(dto);
-        data.CloudStorageRoot = Path.Combine(Constants.CloudStorageRoot, Guid.NewGuid().ToString("N"));
+        data.CloudStorageRoot = Guid.NewGuid().ToString("N");
         data.Status = UserStatus.Normal;
         data =await _userInfoRepository.InsertAsync(data);
 
