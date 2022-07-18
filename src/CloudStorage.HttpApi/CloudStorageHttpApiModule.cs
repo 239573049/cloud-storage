@@ -8,10 +8,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using CloudStorage.Domain.Shared;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 using Volo.Abp;
 using Volo.Abp.Modularity;
+using OpenApiSecurityScheme = Microsoft.OpenApi.Models.OpenApiSecurityScheme;
 
 namespace CloudStorage.HttpApi;
 
@@ -48,42 +50,61 @@ public class CloudStorageHttpApiModule : AbpModule
 
     private static void ConfigureSwaggerServices(ServiceConfigurationContext context)
     {
-        context.Services.AddSwaggerGen(o =>
+        context.Services.AddSwaggerDocument(config =>
         {
-            string[] files = Directory.GetFiles(AppContext.BaseDirectory, "*.xml");//获取api文档
-            string[] array = files;
-            foreach(string filePath in array)
+            config.PostProcess = document =>
             {
-                o.IncludeXmlComments(filePath, includeControllerXmlComments: true);
-            }
-            o.SwaggerDoc("v1", new OpenApiInfo
+                document.Info.Title = "Cloud Api";
+                document.Info.Description = "云盘api";
+            };
+            
+            config.OperationProcessors.Add(new OperationSecurityScopeProcessor("cloud"));
+            config.DocumentProcessors.Add(new SecurityDefinitionAppender("cloud", new NSwag.OpenApiSecurityScheme
             {
-                Title = "token API",
-                Version = "v1"
-            });
-            o.DocInclusionPredicate((docName, description) => true);
-            o.CustomSchemaIds(type => type.FullName);
-            o.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Id = "Bearer", Type = ReferenceType.SecurityScheme
-                        }
-                    },
-                    Array.Empty<string>()
-                }
-            });
-            o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                Description = "请输入文字“Bearer”，后跟空格和JWT值，格式  : Bearer {token}",
                 Name = "Authorization",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey
-            });
+                Description = "Bearer Token",
+                In = OpenApiSecurityApiKeyLocation.Header,
+                Type = OpenApiSecuritySchemeType.ApiKey
+            }));
         });
+        
+        //
+        // context.Services.AddSwaggerGen(o =>
+        // {
+        //     string[] files = Directory.GetFiles(AppContext.BaseDirectory, "*.xml");//获取api文档
+        //     string[] array = files;
+        //     foreach(string filePath in array)
+        //     {
+        //         o.IncludeXmlComments(filePath, includeControllerXmlComments: true);
+        //     }
+        //     o.SwaggerDoc("v1", new OpenApiInfo
+        //     {
+        //         Title = "token API",
+        //         Version = "v1"
+        //     });
+        //     o.DocInclusionPredicate((docName, description) => true);
+        //     o.CustomSchemaIds(type => type.FullName);
+        //     o.AddSecurityRequirement(new OpenApiSecurityRequirement
+        //     {
+        //         {
+        //             new OpenApiSecurityScheme
+        //             {
+        //                 Reference = new OpenApiReference
+        //                 {
+        //                     Id = "Bearer", Type = ReferenceType.SecurityScheme
+        //                 }
+        //             },
+        //             Array.Empty<string>()
+        //         }
+        //     });
+        //     o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        //     {
+        //         Description = "请输入文字“Bearer”，后跟空格和JWT值，格式  : Bearer {token}",
+        //         Name = "Authorization",
+        //         In = ParameterLocation.Header,
+        //         Type = SecuritySchemeType.ApiKey
+        //     });
+        // });
     }
 
     private static async Task ConfigureRedis(ServiceConfigurationContext context)
@@ -151,12 +172,8 @@ public class CloudStorageHttpApiModule : AbpModule
         if(env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            app.UseSwagger();
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "GoYes API");
-                options.RoutePrefix = string.Empty;
-            });
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
         }
 
         app.UseCorrelationId();
