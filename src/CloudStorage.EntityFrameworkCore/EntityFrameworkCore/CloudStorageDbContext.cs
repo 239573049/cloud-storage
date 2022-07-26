@@ -1,5 +1,6 @@
 ﻿using CloudStorage.Domain.CloudStorages;
 using CloudStorage.Domain.Users;
+using CloudStorage.Domain.Users.property;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.Data;
@@ -17,7 +18,9 @@ public class CloudStorageDbContext : AbpDbContext<CloudStorageDbContext>
     public DbSet<UserInfo> UserInfo { get; set; }
 
     public DbSet<Storage?> Storage { get; set; }
-    
+
+    public DbSet<UserStorages> UserStorages { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // 只禁用查询跟踪
@@ -34,8 +37,7 @@ public class CloudStorageDbContext : AbpDbContext<CloudStorageDbContext>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Ignore<ExtraPropertyDictionary>();
-        modelBuilder.ConfigureCloudStorage();
+        modelBuilder.ConfigureStorage();
         modelBuilder.ConfigureAuditLogging();
-        modelBuilder.ConfigureCloudStorageInitData();
     }
 }

@@ -31,6 +31,21 @@ public class NameSuffix : ISingletonDependency
     }
 
     /// <summary>
+    /// 如果不能预览显示默认图标
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+    public async Task<string> GetDefaultIconAsync(string name)
+    {
+        if (FileNameSuffix.Img.Any(x=>name?.EndsWith(x)==true)|| FileNameSuffix.Video.Any(x=>name?.EndsWith(x)==true))
+        {
+            return name;
+        }
+        
+        return await RedisHelper.GetAsync<string>(nameof(FileFormatType.None));
+    }
+    
+    /// <summary>
     /// 获取文件夹图标
     /// </summary>
     /// <returns></returns>
@@ -50,6 +65,6 @@ public class NameSuffix : ISingletonDependency
         await RedisHelper.SetAsync(nameof(FileFormatType.None),
             "https://token-cloud-storage.oss-cn-shenzhen.aliyuncs.com/icon/unknownfile.png");
         await RedisHelper.SetAsync(nameof(FileFormatType.Directory),
-            "https://token-cloud-storage.oss-cn-shenzhen.aliyuncs.com/icon/directory.png");
+            "https://token-cloud-storage.oss-cn-shenzhen.aliyuncs.com/icon/directorys.png");
     }
 }

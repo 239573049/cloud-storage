@@ -102,13 +102,12 @@ public class StorageService : ApplicationService, IStorageService
 
             await _fileHelper.SaveFileAsync(file.Bytes, path, fileName);
         }
-
     }
 
     public async Task CreateDirectoryAsync(CreateDirectoryInput input)
     {
         var user = _principalAccessor.UserId();
-        
+
         var data = new Storage()
         {
             Type = StorageType.Directory,
@@ -136,6 +135,7 @@ public class StorageService : ApplicationService, IStorageService
 
         foreach (var s in dto)
         {
+            s.SetCloudUlr(await _nameSuffix.GetDefaultIconAsync(s?.CloudUrl));
             if (s.Type == StorageType.File)
             {
                 s.Icon = await _nameSuffix.GetIconAsync(s.Path);
@@ -149,22 +149,58 @@ public class StorageService : ApplicationService, IStorageService
         return new PagedResultDto<StorageDto>(count, dto);
     }
 
+    /// <inheritdoc />
     public async Task<GetNewestStorageDto> GetNewestFile()
     {
         var userId = _principalAccessor.UserId();
 
         var storage = await _storageRepository.GetNewestFileAsync(userId);
 
-        var newestStorage = new GetNewestStorageDto()
+        if (storage == null)
         {
-            Id = storage.Id,
-            FileName = storage.Path,
-            Message = "最近的上传的文件",
-            CreationTime = storage.CreationTime,
-            Title = "最近文件",
-            Icon = await _nameSuffix.GetIconAsync(storage.Path)
-        };
+            var newestStorage = new GetNewestStorageDto()
+            {
+                Id = Guid.Empty,
+                FileName = string.Empty,
+                Message = "最近未上传过文件哦",
+                CreationTime = DateTime.Now,
+                Title = "最近文件",
+                Icon = string.Empty
+            };
+            return newestStorage;
+        }
+        else
+        {
+            var newestStorage = new GetNewestStorageDto()
+            {
+                Id = storage.Id,
+                FileName = storage.Path,
+                Message = "最近的上传的文件",
+                CreationTime = storage.CreationTime,
+                Title = "最近文件",
+                Icon = await _nameSuffix.GetIconAsync(storage.Path)
+            };
+            return newestStorage;
+        }
+    }
 
-        return newestStorage;
+    /// <inheritdoc />
+    public async Task<StorageDto> GetStorageAsync(Guid id)
+    {
+        var data = await _storageRepository.FirstOrDefaultAsync(x => x.Id == id);
+
+        var dto = ObjectMapper.Map<Storage, StorageDto>(data);
+
+        dto.SetCloudUlr(await _nameSuffix.GetDefaultIconAsync(dto.CloudUrl));
+        
+        return dto;
+    }
+
+    /// <inheritdoc />
+    public async Task<Guid?> GoBackAsync(Guid? id)
+    {
+        var result =await _storageRepository.FirstOrDefaultAsync(x => x.Id == id);
+
+        return result?.StorageId;
     }
 }

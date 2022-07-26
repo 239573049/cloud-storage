@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CloudStorage.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(CloudStorageDbContext))]
-    [Migration("20220715161207_CreateDatabase")]
-    partial class CreateDatabase
+    [Migration("20220724085831_CreatedStorage")]
+    partial class CreatedStorage
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -65,6 +65,47 @@ namespace CloudStorage.EntityFrameworkCore.Migrations
                     b.HasIndex("UserInfoId");
 
                     b.ToTable("Storage", (string)null);
+
+                    b.HasComment("云盘列表");
+                });
+
+            modelBuilder.Entity("CloudStorage.Domain.Users.property.UserStorages", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("TotalSize")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UsedSize")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserStorages", (string)null);
+
+                    b.HasComment("用户云盘可用大小");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("4cfb19ba-37b5-4d8e-8413-5341070b145f"),
+                            ConcurrencyStamp = "80d351e0a58e4dd29309d64a471cbb3b",
+                            TotalSize = 107374182400L,
+                            UsedSize = 0L,
+                            UserId = new Guid("58996810-f9e9-434e-83de-fa47a548640e")
+                        });
                 });
 
             modelBuilder.Entity("CloudStorage.Domain.Users.UserInfo", b =>
@@ -112,15 +153,15 @@ namespace CloudStorage.EntityFrameworkCore.Migrations
 
                     b.ToTable("UserInfo", (string)null);
 
-                    b.HasComment("用户");
+                    b.HasComment("用户信息");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c74d2f30-0d6f-4d65-b468-862b8e4fb799"),
+                            Id = new Guid("58996810-f9e9-434e-83de-fa47a548640e"),
                             Account = "admin",
-                            CloudStorageRoot = "./wwwroot/CloudStorage\\5b7dfe55651e46eb8484de55eb13b1dd",
-                            ConcurrencyStamp = "c8a39884a36147d6a5771a8192daa3ed",
+                            CloudStorageRoot = "./wwwroot/CloudStorage\\80d740b137a54df395480068683a1ffa",
+                            ConcurrencyStamp = "a8e9bbe753394996bedce4660ff24631",
                             IsDeleted = false,
                             Name = "admin",
                             Password = "admin",

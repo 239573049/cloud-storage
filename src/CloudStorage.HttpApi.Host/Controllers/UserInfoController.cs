@@ -6,11 +6,11 @@ namespace token.Controllers;
 
 [ApiController]
 [Route("api/userinfo")]
-public class UserInfoConTroller : ControllerBase
+public class UserInfoController : ControllerBase
 {
     private readonly IUserInfoService _userInfoService;
 
-    public UserInfoConTroller(IUserInfoService userInfoService)
+    public UserInfoController(IUserInfoService userInfoService)
     {
         _userInfoService = userInfoService;
     }

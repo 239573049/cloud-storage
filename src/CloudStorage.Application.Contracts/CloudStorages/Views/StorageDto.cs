@@ -48,6 +48,21 @@ public class StorageDto : AggregateRoot<Guid>, IHasCreationTime
     /// url
     /// </summary>
     public string? CloudUrl { get; set; }
+
+    /// <summary>
+    /// 是否预览
+    /// </summary>
+    public bool Preview { get; set; } = false;
     
     public DateTime CreationTime { get; set; }
+
+    public void SetCloudUlr(string? cloudUrl)
+    {
+        if (CloudUrl == cloudUrl)
+        {
+            return;
+        }
+        CloudUrl = cloudUrl;
+        Preview = true;
+    }
 }

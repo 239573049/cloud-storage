@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CloudStorage.EntityFrameworkCore.Migrations
 {
-    public partial class CreateDatabase : Migration
+    public partial class CreatedStorage : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -92,7 +92,25 @@ namespace CloudStorage.EntityFrameworkCore.Migrations
                 {
                     table.PrimaryKey("PK_UserInfo", x => x.Id);
                 },
-                comment: "用户")
+                comment: "用户信息")
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "UserStorages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    UserId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    TotalSize = table.Column<long>(type: "bigint", nullable: false),
+                    UsedSize = table.Column<long>(type: "bigint", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserStorages", x => x.Id);
+                },
+                comment: "用户云盘可用大小")
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -181,7 +199,8 @@ namespace CloudStorage.EntityFrameworkCore.Migrations
                         principalTable: "UserInfo",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                })
+                },
+                comment: "云盘列表")
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
@@ -215,7 +234,12 @@ namespace CloudStorage.EntityFrameworkCore.Migrations
             migrationBuilder.InsertData(
                 table: "UserInfo",
                 columns: new[] { "Id", "Account", "BriefIntroduction", "CloudStorageRoot", "ConcurrencyStamp", "HeadPortraits", "IsDeleted", "Name", "Password", "Sex", "Status", "WeChatOpenId" },
-                values: new object[] { new Guid("c74d2f30-0d6f-4d65-b468-862b8e4fb799"), "admin", null, "./wwwroot/CloudStorage\\5b7dfe55651e46eb8484de55eb13b1dd", "c8a39884a36147d6a5771a8192daa3ed", null, false, "admin", "admin", 0, 0, null });
+                values: new object[] { new Guid("58996810-f9e9-434e-83de-fa47a548640e"), "admin", null, "./wwwroot/CloudStorage\\80d740b137a54df395480068683a1ffa", "a8e9bbe753394996bedce4660ff24631", null, false, "admin", "admin", 0, 0, null });
+
+            migrationBuilder.InsertData(
+                table: "UserStorages",
+                columns: new[] { "Id", "ConcurrencyStamp", "TotalSize", "UsedSize", "UserId" },
+                values: new object[] { new Guid("4cfb19ba-37b5-4d8e-8413-5341070b145f"), "80d351e0a58e4dd29309d64a471cbb3b", 107374182400L, 0L, new Guid("58996810-f9e9-434e-83de-fa47a548640e") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AbpAuditLogActions_AuditLogId",
@@ -276,6 +300,16 @@ namespace CloudStorage.EntityFrameworkCore.Migrations
                 name: "IX_UserInfo_Id",
                 table: "UserInfo",
                 column: "Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserStorages_Id",
+                table: "UserStorages",
+                column: "Id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserStorages_UserId",
+                table: "UserStorages",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -288,6 +322,9 @@ namespace CloudStorage.EntityFrameworkCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "Storage");
+
+            migrationBuilder.DropTable(
+                name: "UserStorages");
 
             migrationBuilder.DropTable(
                 name: "AbpEntityChanges");

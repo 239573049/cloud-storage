@@ -1,6 +1,7 @@
 using CloudStorage.Application.Contracts.Helper;
 using CloudStorage.Application.Contracts.Users;
 using CloudStorage.Application.Contracts.Users.Views;
+using CloudStorage.Application.Contracts.UserStorage;
 using CloudStorage.Domain.Shared;
 using CloudStorage.Domain.Users;
 using Volo.Abp;
@@ -9,17 +10,21 @@ using Volo.Abp.Domain.Repositories;
 
 namespace CloudStorage.Application.Users;
 
+/// <inheritdoc />
 public class UserInfoService : ApplicationService, IUserInfoService
 {
     private readonly IUserInfoRepository _userInfoRepository;
     private readonly IPrincipalAccessor _principalAccessor;
-
-    public UserInfoService(IUserInfoRepository userInfoRepository, IPrincipalAccessor principalAccessor)
+    private readonly IUserStorageAppService _userStorageAppService;
+    /// <inheritdoc />
+    public UserInfoService(IUserInfoRepository userInfoRepository, IPrincipalAccessor principalAccessor, IUserStorageAppService userStorageAppService)
     {
         _userInfoRepository = userInfoRepository;
         _principalAccessor = principalAccessor;
+        _userStorageAppService = userStorageAppService;
     }
 
+    /// <inheritdoc />
     public async Task CreateUserInfoAsync(UserInfoDto dto)
     {
         if (dto.Password.IsNullOrWhiteSpace())
@@ -33,13 +38,17 @@ public class UserInfoService : ApplicationService, IUserInfoService
         data.CloudStorageRoot = Guid.NewGuid().ToString("N");
         data.Status = UserStatus.Normal;
         data =await _userInfoRepository.InsertAsync(data);
-
+        
+        // 创建用户云盘
+        await _userStorageAppService.CreateUserStorageAsync(data.Id);
+        
         if (!Directory.Exists(data.CloudStorageRoot))
         {
             Directory.CreateDirectory(data.CloudStorageRoot);
         }
     }
 
+    /// <inheritdoc />
     public async Task<string> CreateTokenAsync(CreateTokenInput input)
     {
         var user =await _userInfoRepository.FirstOrDefaultAsync(x =>

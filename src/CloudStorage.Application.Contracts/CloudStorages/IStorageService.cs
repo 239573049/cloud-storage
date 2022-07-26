@@ -43,4 +43,18 @@ public interface IStorageService
     /// </summary>
     /// <returns></returns>
     Task<GetNewestStorageDto> GetNewestFile();
+
+    /// <summary>
+    /// 获取详情
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    Task<StorageDto> GetStorageAsync(Guid id);
+
+    /// <summary>
+    /// 获取上一层id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    Task<Guid?> GoBackAsync(Guid? id);
 }

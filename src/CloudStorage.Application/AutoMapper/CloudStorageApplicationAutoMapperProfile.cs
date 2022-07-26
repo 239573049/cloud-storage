@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using CloudStorage.Application.Contracts.CloudStorages.Views;
 using CloudStorage.Application.Contracts.Users.Views;
+using CloudStorage.Application.Contracts.UserStorage;
 using CloudStorage.Domain.CloudStorages;
 using CloudStorage.Domain.Users;
+using CloudStorage.Domain.Users.property;
 
 namespace CloudStorage.Application.AutoMapper;
 
@@ -16,6 +18,7 @@ public class CloudStorageApplicationAutoMapperProfile : Profile
     {
         ConfigureUserInfo();
         ConfigureStorage();
+        ConfigureUserStorage();
     }
 
     private void ConfigureUserInfo()
@@ -28,5 +31,10 @@ public class CloudStorageApplicationAutoMapperProfile : Profile
     {
         CreateMap<StorageDto, Storage>();
         CreateMap<Storage, StorageDto>();
+    }
+
+    private void ConfigureUserStorage()
+    {
+        CreateMap<UserStoragesDto, UserStorages>().ReverseMap();
     }
 }

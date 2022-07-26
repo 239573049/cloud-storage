@@ -5,8 +5,8 @@ namespace CloudStorage.Domain;
 
 [DependsOn(
     typeof(AbpAuditLoggingDomainModule)
-    )]
-public class CloudStorageDomainModule:AbpModule
+)]
+public class CloudStorageDomainModule : AbpModule
 {
     
 }

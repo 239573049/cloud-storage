@@ -50,7 +50,7 @@ public class UserInfo : AggregateRoot<Guid>, ISoftDelete, IHasCreationTime
     /// 状态
     /// </summary>
     public UserStatus Status { get; set; }
-
+    
     private string? _cloudStorageRoot;
 
     /// <summary>

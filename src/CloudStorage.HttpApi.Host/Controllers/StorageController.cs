@@ -32,7 +32,7 @@ public class StorageController : ControllerBase
         var dto = await _storageService.UploadFilesAsync(new UploadFileInput()
         {
             Length = file.Length,
-            Name = file.Name,
+            Name = file.FileName,
             Bytes =await file.OpenReadStream().GetAllBytesAsync()
         }, storageId);
 
@@ -86,5 +86,27 @@ public class StorageController : ControllerBase
     public async Task CreateDirectoryAsync(CreateDirectoryInput input)
     {
         await _storageService.CreateDirectoryAsync(input);
+    }
+
+    /// <summary>
+    /// 获取详情
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("storage/{id:guid}")]
+    public async Task<StorageDto> GetStorageAsync(Guid id)
+    {
+        return await _storageService.GetStorageAsync(id);
+    }
+
+    /// <summary>
+    /// 获取上一级id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("go-back")]
+    public async Task<Guid?> GoBackAsync(Guid? id)
+    {
+        return await _storageService.GoBackAsync(id);
     }
 }

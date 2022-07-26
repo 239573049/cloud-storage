@@ -2,6 +2,9 @@ using CloudStorage.Application.Contracts.Users.Views;
 
 namespace CloudStorage.Application.Contracts.Users;
 
+/// <summary>
+/// 用户
+/// </summary>
 public interface IUserInfoService
 {
     /// <summary>
