@@ -53,6 +53,7 @@ public class CloudStorageHttpApiModule : AbpModule
         {
             config.PostProcess = document =>
             {
+                document.BasePath = "cloud-storage";
                 document.Info.Title = "Cloud Api";
                 document.Info.Description = "云盘api";
             };
