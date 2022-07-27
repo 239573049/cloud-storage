@@ -57,8 +57,8 @@ public class CloudStorageHttpApiModule : AbpModule
                 document.Info.Description = "云盘api";
             };
             
-            config.OperationProcessors.Add(new OperationSecurityScopeProcessor("cloud"));
-            config.DocumentProcessors.Add(new SecurityDefinitionAppender("cloud", new NSwag.OpenApiSecurityScheme
+            config.OperationProcessors.Add(new OperationSecurityScopeProcessor("cloud-storage"));
+            config.DocumentProcessors.Add(new SecurityDefinitionAppender("cloud-storage", new NSwag.OpenApiSecurityScheme
             {
                 Name = "Authorization",
                 Description = "Bearer Token",
