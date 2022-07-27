@@ -56,7 +56,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="wwwroot\CloudStorage" />
+      <Folder Include="wwwroot" />
     </ItemGroup>
 
 </Project>
