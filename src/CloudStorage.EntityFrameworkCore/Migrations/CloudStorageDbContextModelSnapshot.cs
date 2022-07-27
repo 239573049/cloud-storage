@@ -31,9 +31,6 @@ namespace CloudStorage.EntityFrameworkCore.Migrations
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<long?>("Length")
                         .HasColumnType("bigint");
 
@@ -98,11 +95,11 @@ namespace CloudStorage.EntityFrameworkCore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("4cfb19ba-37b5-4d8e-8413-5341070b145f"),
-                            ConcurrencyStamp = "80d351e0a58e4dd29309d64a471cbb3b",
+                            Id = new Guid("aa595ac0-71d2-47e4-829b-66a34cd0283e"),
+                            ConcurrencyStamp = "b2a72f54a67140cebb22dc1687147c75",
                             TotalSize = 107374182400L,
                             UsedSize = 0L,
-                            UserId = new Guid("58996810-f9e9-434e-83de-fa47a548640e")
+                            UserId = new Guid("49581dd4-2c39-4670-919b-5232ce0e9e3e")
                         });
                 });
 
@@ -156,10 +153,10 @@ namespace CloudStorage.EntityFrameworkCore.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("58996810-f9e9-434e-83de-fa47a548640e"),
+                            Id = new Guid("49581dd4-2c39-4670-919b-5232ce0e9e3e"),
                             Account = "admin",
-                            CloudStorageRoot = "./wwwroot/CloudStorage\\80d740b137a54df395480068683a1ffa",
-                            ConcurrencyStamp = "a8e9bbe753394996bedce4660ff24631",
+                            CloudStorageRoot = "./wwwroot/CloudStorage\\ac4dedfa1ebe4c3a9bfcbfdd65d1f3d2",
+                            ConcurrencyStamp = "f400bbe8cd2449d5a251cfc13af3128c",
                             IsDeleted = false,
                             Name = "admin",
                             Password = "admin",

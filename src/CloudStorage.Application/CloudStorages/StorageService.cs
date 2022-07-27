@@ -192,15 +192,53 @@ public class StorageService : ApplicationService, IStorageService
         var dto = ObjectMapper.Map<Storage, StorageDto>(data);
 
         dto.SetCloudUlr(await _nameSuffix.GetDefaultIconAsync(dto.CloudUrl));
-        
+
         return dto;
     }
 
     /// <inheritdoc />
     public async Task<Guid?> GoBackAsync(Guid? id)
     {
-        var result =await _storageRepository.FirstOrDefaultAsync(x => x.Id == id);
+        var result = await _storageRepository.FirstOrDefaultAsync(x => x.Id == id);
 
         return result?.StorageId;
+    }
+
+    /// <inheritdoc />
+    public async Task DeleteStorageAsync(Guid id)
+    {
+        var result = await _storageRepository.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (result.Type == StorageType.File)
+        {
+            await _fileHelper.DeleteFileAsync(result.StoragePath);
+        }
+        else
+        {
+            var storages =await _storageRepository.GetListAsync(x=>x.UserInfoId ==_principalAccessor.UserId());
+            var ids = new List<Guid>();
+            await GetFolderListAsync(storages, id, ids);
+            var storage =await _storageRepository.GetListAsync(x=>ids.Contains(x.Id));
+
+            await _fileHelper.DeleteFileListAsync(storage.Select(x => x.StoragePath).ToList());
+
+            await _storageRepository.DeleteManyAsync(storage);
+        }
+
+        await _storageRepository.DeleteAsync(x=>x.Id ==id);
+    }
+
+    /// <inheritdoc />
+    public async Task GetFolderListAsync(List<Storage> storages, Guid folderId, List<Guid> ids)
+    {
+        var data = storages.Where(x => x.StorageId == folderId);
+
+        storages = storages.Where(x => !data.Select(x => x.Id).Contains(x.Id)).ToList();
+
+        foreach (var storage in data.Where(x => x.Type == StorageType.Directory))
+        {
+            await GetFolderListAsync(storages, storage.Id, ids);
+        }
+
     }
 }

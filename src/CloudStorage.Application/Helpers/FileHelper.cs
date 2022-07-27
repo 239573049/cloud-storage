@@ -1,4 +1,6 @@
+using CloudStorage.Domain.Shared;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Volo.Abp.DependencyInjection;
 
 namespace CloudStorage.Application.Helpers;
@@ -8,6 +10,13 @@ namespace CloudStorage.Application.Helpers;
 /// </summary>
 public class FileHelper : ISingletonDependency
 {
+    private readonly ILogger<FileHelper> _fileHelper;
+
+    public FileHelper(ILogger<FileHelper> fileHelper)
+    {
+        _fileHelper = fileHelper;
+    }
+
     /// <summary>
     /// 保存文件到本地
     /// </summary>
@@ -44,5 +53,36 @@ public class FileHelper : ISingletonDependency
         await fileStream.WriteAsync(bytes);
         fileStream.Close();
         bytes=null;
+    }
+
+    /// <summary>
+    /// 删除文件
+    /// </summary>
+    /// <param name="name"></param>
+    public async Task DeleteFileAsync(string name)
+    {
+        if (File.Exists(name))
+        {
+            try
+            {
+                File.Delete(name);
+            }
+            catch (Exception e)
+            {
+                _fileHelper.LogError("{0} : message: {1}",DateTime.Now.ToString(Constants.DefaultFullDateFormat),e);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 批量删除文件
+    /// </summary>
+    /// <param name="names"></param>
+    public async Task DeleteFileListAsync(List<string> names)
+    {
+        foreach (var name in names)
+        {
+            await DeleteFileAsync(name);
+        }
     }
 }

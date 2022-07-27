@@ -10,7 +10,7 @@ namespace CloudStorage.Domain.CloudStorages;
 /// <summary>
 /// 云盘管理
 /// </summary>
-public class Storage: AggregateRoot<Guid>, ISoftDelete, IHasCreationTime
+public class Storage: AggregateRoot<Guid>, IHasCreationTime
 {
     /// <summary>
     /// 类型
@@ -55,8 +55,6 @@ public class Storage: AggregateRoot<Guid>, ISoftDelete, IHasCreationTime
     }
 
     public virtual UserInfo UserInfo { get; set; }
-    
-    public bool IsDeleted { get; set; }
     
     public DateTime CreationTime { get; set; }
 }

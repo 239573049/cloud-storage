@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CloudStorage.EntityFrameworkCore.Migrations
 {
-    public partial class CreatedStorage : Migration
+    public partial class CreateDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -185,7 +185,6 @@ namespace CloudStorage.EntityFrameworkCore.Migrations
                     StorageId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     Length = table.Column<long>(type: "bigint", nullable: true),
                     UserInfoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
@@ -234,12 +233,12 @@ namespace CloudStorage.EntityFrameworkCore.Migrations
             migrationBuilder.InsertData(
                 table: "UserInfo",
                 columns: new[] { "Id", "Account", "BriefIntroduction", "CloudStorageRoot", "ConcurrencyStamp", "HeadPortraits", "IsDeleted", "Name", "Password", "Sex", "Status", "WeChatOpenId" },
-                values: new object[] { new Guid("58996810-f9e9-434e-83de-fa47a548640e"), "admin", null, "./wwwroot/CloudStorage\\80d740b137a54df395480068683a1ffa", "a8e9bbe753394996bedce4660ff24631", null, false, "admin", "admin", 0, 0, null });
+                values: new object[] { new Guid("49581dd4-2c39-4670-919b-5232ce0e9e3e"), "admin", null, "./wwwroot/CloudStorage\\ac4dedfa1ebe4c3a9bfcbfdd65d1f3d2", "f400bbe8cd2449d5a251cfc13af3128c", null, false, "admin", "admin", 0, 0, null });
 
             migrationBuilder.InsertData(
                 table: "UserStorages",
                 columns: new[] { "Id", "ConcurrencyStamp", "TotalSize", "UsedSize", "UserId" },
-                values: new object[] { new Guid("4cfb19ba-37b5-4d8e-8413-5341070b145f"), "80d351e0a58e4dd29309d64a471cbb3b", 107374182400L, 0L, new Guid("58996810-f9e9-434e-83de-fa47a548640e") });
+                values: new object[] { new Guid("aa595ac0-71d2-47e4-829b-66a34cd0283e"), "b2a72f54a67140cebb22dc1687147c75", 107374182400L, 0L, new Guid("49581dd4-2c39-4670-919b-5232ce0e9e3e") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AbpAuditLogActions_AuditLogId",

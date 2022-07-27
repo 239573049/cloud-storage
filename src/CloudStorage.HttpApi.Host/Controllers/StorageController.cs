@@ -109,4 +109,14 @@ public class StorageController : ControllerBase
     {
         return await _storageService.GoBackAsync(id);
     }
+
+    /// <summary>
+    /// 删除指定文件或文件夹
+    /// </summary>
+    /// <param name="id"></param>
+    [HttpDelete("storage/{id:guid}")]
+    public async Task DeleteStorageAsync(Guid id)
+    {
+        await _storageService.DeleteStorageAsync(id);
+    }
 }

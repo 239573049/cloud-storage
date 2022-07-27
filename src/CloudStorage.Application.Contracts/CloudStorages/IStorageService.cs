@@ -1,4 +1,5 @@
 using CloudStorage.Application.Contracts.CloudStorages.Views;
+using CloudStorage.Domain.CloudStorages;
 using Volo.Abp.Application.Dtos;
 
 namespace CloudStorage.Application.Contracts.CloudStorages;
@@ -57,4 +58,20 @@ public interface IStorageService
     /// <param name="id"></param>
     /// <returns></returns>
     Task<Guid?> GoBackAsync(Guid? id);
+
+    /// <summary>
+    /// 删除文件
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    Task DeleteStorageAsync(Guid id);
+
+    /// <summary>
+    /// 递归所有文件
+    /// </summary>
+    /// <param name="storages"></param>
+    /// <param name="folderId">文件夹名称</param>
+    /// <param name="ids">所有文件路径</param>
+    /// <returns></returns>
+    Task GetFolderListAsync(List<Storage> storages,Guid folderId, List<Guid> ids);
 }

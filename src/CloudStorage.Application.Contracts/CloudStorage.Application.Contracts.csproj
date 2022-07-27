@@ -16,6 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\CloudStorage.Domain.Shared\CloudStorage.Domain.Shared.csproj" />
+      <ProjectReference Include="..\CloudStorage.Domain\CloudStorage.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>

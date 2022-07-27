@@ -5,7 +5,7 @@ using Volo.Abp.DependencyInjection;
 namespace CloudStorage.Application.Helpers;
 
 
-public class ZipUtility : ISingletonDependency
+public class ZipHelper : ISingletonDependency
 {
     /// <summary>
     /// 压缩Stream

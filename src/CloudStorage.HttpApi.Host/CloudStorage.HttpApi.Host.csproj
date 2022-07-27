@@ -49,6 +49,10 @@
     <ItemGroup>
       <_ContentIncludedByDefault Remove="wwwroot\CloudStorage\5b7dfe55651e46eb8484de55eb13b1dd\e99b44bd3fb64b7885faaa41796243afvideo.png" />
       <_ContentIncludedByDefault Remove="wwwroot\CloudStorage\80d740b137a54df395480068683a1ffa\2d84f651bf9445dfab7cdfe4ef9159b9file" />
+      <_ContentIncludedByDefault Remove="wwwroot\CloudStorage\80d740b137a54df395480068683a1ffa\328982e285e049abb51ada89690e1d9fth.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\CloudStorage\80d740b137a54df395480068683a1ffa\3fef45ca60f24b9d93131b6f4ce37a8113.png" />
+      <_ContentIncludedByDefault Remove="wwwroot\CloudStorage\80d740b137a54df395480068683a1ffa\9f71ba43d1154a10b07ae01bd688c71bmountains-g8705c4b72_1920.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\CloudStorage\80d740b137a54df395480068683a1ffa\e9cb86af9f554f83b6f6092f3624404fA.png" />
     </ItemGroup>
 
     <ItemGroup>
