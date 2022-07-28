@@ -39,6 +39,7 @@ public class StorageService : ApplicationService, IStorageService
     }
 
 
+    /// <inheritdoc />
     public async Task<StorageDto> UploadFilesAsync(UploadFileInput input, Guid? storageId = null)
     {
         var userId = _principalAccessor.UserId();
@@ -71,11 +72,12 @@ public class StorageService : ApplicationService, IStorageService
         await _fileHelper.SaveFileAsync(input.Bytes, path, fileName);
 
         // 发布上传文件事件处理
-        await _distributedEventBus.PublishAsync(new UserStorageEto(input.Length, userId));
+        await _distributedEventBus.PublishAsync(new UserStorageEto(userId));
         
         return ObjectMapper.Map<Storage, StorageDto>(data);
     }
 
+    /// <inheritdoc />
     public async Task UploadFileListAsync(List<UploadFileInput> files, Guid? storageId = null)
     {
         var userId = _principalAccessor.UserId();
@@ -90,8 +92,6 @@ public class StorageService : ApplicationService, IStorageService
         }
 
         var user = await _userInfoRepository.FirstOrDefaultAsync(x => x.Id == userId);
-
-        long legnth = 0;
         
         foreach (var file in files)
         {
@@ -110,14 +110,13 @@ public class StorageService : ApplicationService, IStorageService
             data = await _storageRepository.InsertAsync(data, true);
 
             await _fileHelper.SaveFileAsync(file.Bytes, path, fileName);
-
-            legnth += file.Length;
         }
         
         // 发布上传文件事件处理
-        await _distributedEventBus.PublishAsync(new UserStorageEto(legnth, userId));
+        await _distributedEventBus.PublishAsync(new UserStorageEto( userId));
     }
 
+    /// <inheritdoc />
     public async Task CreateDirectoryAsync(CreateDirectoryInput input)
     {
         var user = _principalAccessor.UserId();
@@ -133,6 +132,7 @@ public class StorageService : ApplicationService, IStorageService
         data = await _storageRepository.InsertAsync(data);
     }
 
+    /// <inheritdoc />
     public async Task<PagedResultDto<StorageDto>> GetStorageListAsync(GetStorageListInput input)
     {
         var userId = _principalAccessor.UserId();
@@ -240,6 +240,10 @@ public class StorageService : ApplicationService, IStorageService
         }
 
         await _storageRepository.DeleteAsync(x=>x.Id ==id);
+        
+        
+        // 发布上传文件事件处理
+        await _distributedEventBus.PublishAsync(new UserStorageEto(_principalAccessor.UserId()));
     }
 
     /// <inheritdoc />

@@ -6,18 +6,16 @@ namespace CloudStorage.Domain.Shared.Events;
 public class UserStorageEto 
 {
     /// <summary>
-    /// 长度
-    /// </summary>
-    public long? Length { get; set; }
-
-    /// <summary>
     /// 用户Id
     /// </summary>
     public Guid UserId { get; set; }
 
-    public UserStorageEto(long? length, Guid userId)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userId"></param>
+    public UserStorageEto(Guid userId)
     {
-        Length = length;
         UserId = userId;
     }
 }

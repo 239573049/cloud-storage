@@ -12,6 +12,7 @@ public class StorageRepository : EfCoreRepository<CloudStorageDbContext, Storage
     {
     }
 
+    /// <inheritdoc />
     public async Task<Storage?> GetNewestFileAsync(Guid userId)
     {
         var dbContext = await GetDbContextAsync();
@@ -20,5 +21,17 @@ public class StorageRepository : EfCoreRepository<CloudStorageDbContext, Storage
             .OrderByDescending(x => x.CreationTime);
 
         return await query.FirstOrDefaultAsync();
+    }
+
+    /// <inheritdoc />
+    public async Task<long?> GetUseLengthAsync(Guid userId)
+    {
+        var dbContext = await GetDbContextAsync();
+
+        var query =
+            dbContext.Storage.Where(x => x.UserInfoId == userId && x.Type == StorageType.File && x.Length != null)
+                .SumAsync(x => x.Length);
+
+        return await query;
     }
 }

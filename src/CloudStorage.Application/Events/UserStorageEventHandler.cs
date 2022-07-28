@@ -1,3 +1,4 @@
+using CloudStorage.Domain.CloudStorages;
 using CloudStorage.Domain.Shared.Events;
 using CloudStorage.Domain.Users.property;
 using Volo.Abp.DependencyInjection;
@@ -14,24 +15,25 @@ public class UserStorageEventHandler
         ITransientDependency
 {
     private readonly IUserStoragesRepository _userStoragesRepository;
+    private readonly IStorageRepository _storageRepository;
 
-    /// <summary>
-    /// 用户上传处理
-    /// </summary>
-    /// <param name="userStoragesRepository"></param>
-    public UserStorageEventHandler(IUserStoragesRepository userStoragesRepository)
+    /// <inheritdoc />
+    public UserStorageEventHandler(IUserStoragesRepository userStoragesRepository, IStorageRepository storageRepository)
     {
         _userStoragesRepository = userStoragesRepository;
+        _storageRepository = storageRepository;
     }
 
     /// <inheritdoc />
     public async Task HandleEventAsync(UserStorageEto eventData)
     {
+        var length = await _storageRepository.GetUseLengthAsync(eventData.UserId);
+
         var userStorage = await _userStoragesRepository.FirstOrDefaultAsync(x => x.UserId == eventData.UserId);
 
         if (userStorage != null)
         {
-            userStorage.UsedSize += eventData.Length ?? 0;
+            userStorage.UsedSize = length ?? 0;
             await _userStoragesRepository.UpdateAsync(userStorage);
         }
     }
