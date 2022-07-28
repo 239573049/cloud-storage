@@ -29,7 +29,6 @@ public class FileHelper : ISingletonDependency
         {
             Directory.CreateDirectory(path);
         }
-        
         var fileStream = File.Create(Path.Combine(path,fileName));
         await stream.CopyToAsync(fileStream);
         fileStream.Close();
@@ -53,6 +52,8 @@ public class FileHelper : ISingletonDependency
         await fileStream.WriteAsync(bytes);
         fileStream.Close();
         bytes=null;
+        
+        _fileHelper.LogWarning("上传路径{0}，上传文件名字{1}",path,fileName);
     }
 
     /// <summary>
