@@ -64,7 +64,7 @@ public static class CloudStorageEntityFreameworkCoreExtension
             Name = "admin",
             Password = "admin",
             Status = UserStatus.Normal,
-            CloudStorageRoot =Guid.NewGuid().ToString("N"),
+            CloudStorageRoot = Guid.NewGuid().ToString("N"),
             Sex = SexType.None
         };
         

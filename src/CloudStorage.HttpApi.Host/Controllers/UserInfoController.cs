@@ -20,4 +20,14 @@ public class UserInfoController : ControllerBase
     {
         await _userInfoService.CreateUserInfoAsync(dto);
     }
+
+    /// <summary>
+    /// 获取用户信息
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    public async Task<UserInfoDto> GetAsync()
+    {
+        return await _userInfoService.GetAsync();
+    }
 }

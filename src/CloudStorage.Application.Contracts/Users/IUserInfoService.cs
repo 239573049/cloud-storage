@@ -19,4 +19,10 @@ public interface IUserInfoService
     /// </summary>
     /// <returns></returns>
     Task<string> CreateTokenAsync(CreateTokenInput input);
+
+    /// <summary>
+    /// 获取用户信息
+    /// </summary>
+    /// <returns></returns>
+    Task<UserInfoDto> GetAsync();
 }

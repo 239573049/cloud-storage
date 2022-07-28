@@ -25,6 +25,7 @@ public class CloudStorageApplicationAutoMapperProfile : Profile
     {
         CreateMap<UserInfoDto,UserInfo>();
         CreateMap<UserInfo,UserInfoDto>();
+        CreateMap<UserInfoView, UserInfoDto>();
     }
     
     private void ConfigureStorage()

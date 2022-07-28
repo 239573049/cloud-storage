@@ -31,4 +31,5 @@ public class AuthenticationController : ControllerBase
 
         return token;
     }
+    
 }

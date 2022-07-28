@@ -4,11 +4,13 @@ using CloudStorage.Application.Contracts.Helper;
 using CloudStorage.Application.Helpers;
 using CloudStorage.Domain.CloudStorages;
 using CloudStorage.Domain.Shared;
+using CloudStorage.Domain.Shared.Events;
 using CloudStorage.Domain.Users;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.EventBus.Distributed;
 
 namespace CloudStorage.Application.CloudStorages;
 
@@ -20,18 +22,20 @@ public class StorageService : ApplicationService, IStorageService
     private readonly IStorageRepository _storageRepository;
     private readonly IPrincipalAccessor _principalAccessor;
     private readonly IUserInfoRepository _userInfoRepository;
+    private readonly IDistributedEventBus _distributedEventBus;
     private readonly FileHelper _fileHelper;
     private readonly NameSuffix _nameSuffix;
 
     /// <inheritdoc />
     public StorageService(IStorageRepository storageRepository, IPrincipalAccessor principalAccessor,
-        IUserInfoRepository userInfoRepository, FileHelper fileHelper, NameSuffix nameSuffix)
+        IUserInfoRepository userInfoRepository, FileHelper fileHelper, NameSuffix nameSuffix, IDistributedEventBus distributedEventBus)
     {
         _storageRepository = storageRepository;
         _principalAccessor = principalAccessor;
         _userInfoRepository = userInfoRepository;
         _fileHelper = fileHelper;
         _nameSuffix = nameSuffix;
+        _distributedEventBus = distributedEventBus;
     }
 
 
@@ -66,6 +70,9 @@ public class StorageService : ApplicationService, IStorageService
 
         await _fileHelper.SaveFileAsync(input.Bytes, path, fileName);
 
+        // 发布上传文件事件处理
+        await _distributedEventBus.PublishAsync(new UserStorageEto(input.Length, userId));
+        
         return ObjectMapper.Map<Storage, StorageDto>(data);
     }
 
@@ -84,6 +91,8 @@ public class StorageService : ApplicationService, IStorageService
 
         var user = await _userInfoRepository.FirstOrDefaultAsync(x => x.Id == userId);
 
+        long legnth = 0;
+        
         foreach (var file in files)
         {
             var fileName = Guid.NewGuid().ToString("N") + file.Name;
@@ -101,7 +110,12 @@ public class StorageService : ApplicationService, IStorageService
             data = await _storageRepository.InsertAsync(data, true);
 
             await _fileHelper.SaveFileAsync(file.Bytes, path, fileName);
+
+            legnth += file.Length;
         }
+        
+        // 发布上传文件事件处理
+        await _distributedEventBus.PublishAsync(new UserStorageEto(legnth, userId));
     }
 
     public async Task CreateDirectoryAsync(CreateDirectoryInput input)

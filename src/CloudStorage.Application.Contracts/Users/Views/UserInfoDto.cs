@@ -53,4 +53,14 @@ public class UserInfoDto : AggregateRoot<Guid>, IHasCreationTime
     public string? CloudStorageRoot { get; set; }
     
     public DateTime CreationTime { get; }
+    
+    /// <summary>
+    /// 用户总大小
+    /// </summary>
+    public long TotalSize { get; set; }
+
+    /// <summary>
+    /// 已经使用大小
+    /// </summary>
+    public long UsedSize { get; set; } = 0;
 }

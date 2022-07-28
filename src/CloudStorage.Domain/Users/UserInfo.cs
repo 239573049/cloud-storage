@@ -50,7 +50,7 @@ public class UserInfo : AggregateRoot<Guid>, ISoftDelete, IHasCreationTime
     /// 状态
     /// </summary>
     public UserStatus Status { get; set; }
-    
+
     private string? _cloudStorageRoot;
 
     /// <summary>
@@ -59,7 +59,7 @@ public class UserInfo : AggregateRoot<Guid>, ISoftDelete, IHasCreationTime
     public string? CloudStorageRoot
     {
         get { return _cloudStorageRoot; }
-        set { _cloudStorageRoot = Path.Join(Constants.CloudStorageRoot, value); }
+        set { _cloudStorageRoot = Constants.CloudStorageRoot + "/" + value; }
     }
 
     public bool IsDeleted { get; set; }
