@@ -241,7 +241,6 @@ public class StorageService : ApplicationService, IStorageService
 
         await _storageRepository.DeleteAsync(x=>x.Id ==id);
         
-        
         // 发布上传文件事件处理
         await _distributedEventBus.PublishAsync(new UserStorageEto(_principalAccessor.UserId()));
     }
