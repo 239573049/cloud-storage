@@ -34,6 +34,22 @@ public class FileHelper : ISingletonDependency
         fileStream.Close();
         stream.Close();
     }
+
+    /// <summary>
+    /// 创建FileStream
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="fileName"></param>
+    /// <returns></returns>
+    public async Task<FileStream> CreateFileStreamAsync(string path, string fileName)
+    {
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+        
+        return File.Create(Path.Combine(path,fileName));
+    }
     
     /// <summary>
     /// 保存文件到本地
@@ -73,6 +89,16 @@ public class FileHelper : ISingletonDependency
                 _fileHelper.LogError("{0} : message: {1}",DateTime.Now.ToString(Constants.DefaultFullDateFormat),e);
             }
         }
+    }
+
+    /// <summary>
+    /// 删除文件
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="fileName"></param>
+    public async Task DeleteFileAsync(string path, string fileName)
+    {
+        await DeleteFileAsync(Path.Combine(path, fileName));
     }
 
     /// <summary>

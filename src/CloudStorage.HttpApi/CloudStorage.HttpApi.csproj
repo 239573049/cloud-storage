@@ -11,6 +11,8 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.5" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="6.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Redis" Version="1.1.5" />
         <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.18.0" />
         <PackageReference Include="NSwag.AspNetCore" Version="13.16.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />

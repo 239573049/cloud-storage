@@ -27,7 +27,7 @@ public class StorageController : ControllerBase
     /// <param name="storageId"></param>
     /// <returns></returns>
     [HttpPost("upload-file")]
-    public async Task<StorageDto> UploadFilesAsync(IFormFile file,[FromQuery]Guid? storageId = null)
+    public async Task<StorageDto> UploadFilesAsync(IFormFile file,Guid? storageId = null)
     {
         var dto = await _storageService.UploadFilesAsync(new UploadFileInput()
         {

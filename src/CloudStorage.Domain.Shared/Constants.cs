@@ -2,7 +2,7 @@
 
 public class Constants
 {
-    public const string ClaimKey = "id";
+    public const string Id = "id";
     
     public const string User = "user";
 

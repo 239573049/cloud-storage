@@ -1,7 +1,9 @@
+using CloudStorage.Domain.Shared;
 using Microsoft.Extensions.FileProviders;
 using Serilog;
 using Serilog.Events;
 using token;
+using token.Hubs;
 
 Log.Logger = new LoggerConfiguration()
 #if DEBUG
@@ -34,5 +36,9 @@ await app.InitializeApplicationAsync();
 app.UseStaticFiles();
 
 app.MapControllers();
+
+app.MapHub<FileStreamHub>(SignalRConstants.FileStream, x =>
+{
+});
 
 await app.RunAsync();

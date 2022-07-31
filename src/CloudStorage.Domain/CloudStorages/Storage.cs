@@ -57,4 +57,12 @@ public class Storage: AggregateRoot<Guid>, IHasCreationTime
     public virtual UserInfo UserInfo { get; set; }
     
     public DateTime CreationTime { get; set; }
+
+    public Storage()
+    {
+    }
+
+    public Storage(Guid id) : base(id)
+    {
+    }
 }

@@ -1,8 +1,10 @@
 ﻿using CloudStorage.Application;
+using CloudStorage.Domain.Shared;
 using CloudStorage.EntityFrameworkCore;
 using CloudStorage.HttpApi;
 using CloudStorage.HttpApi.Module;
 using Microsoft.Extensions.FileProviders;
+using token.Hubs;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
@@ -20,13 +22,12 @@ namespace token;
     typeof(CloudStorageEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreSerilogModule)
 )]
-public  class CloudStorageHttpApiModule : AbpModule
+public class CloudStorageHttpApiModule : AbpModule
 {
     private void ConfigConsul(ServiceConfigurationContext context, IConfiguration configuration)
     {
         var configurationSection = configuration.GetSection(nameof(ConsulOption));
         context.Services.Configure<ConsulOption>(configurationSection);
-        
     }
 
     /// <summary>
@@ -47,10 +48,8 @@ public  class CloudStorageHttpApiModule : AbpModule
     {
         var app = context.GetApplicationBuilder();
         app.UseHealthChecks("/health");
-                
+
         app.UseUnitOfWork();
         app.UseConfiguredEndpoints();
-        
     }
-
 }

@@ -29,7 +29,7 @@ public class PrincipalAccessor : IPrincipalAccessor, ITransientDependency
 
     public string Name => _contextAccessor.HttpContext?.User.Identity?.Name ?? string.Empty;
 
-    public Guid ID => Guid.Parse(GetClaimValueByType(Constants.ClaimKey).FirstOrDefault() ?? Guid.Empty.ToString());
+    public Guid ID => Guid.Parse(GetClaimValueByType(Constants.Id).FirstOrDefault() ?? Guid.Empty.ToString());
 
     public bool? IsAuthenticated()
     {
@@ -97,7 +97,7 @@ public class PrincipalAccessor : IPrincipalAccessor, ITransientDependency
         var claims = new[]
         {
             new Claim(Constants.User, JsonConvert.SerializeObject(t)),
-            new Claim(Constants.ClaimKey,t.Id.ToString())
+            new Claim(Constants.Id,t.Id.ToString())
         };
 
         var keyBytes = Encoding.UTF8.GetBytes(_tokenOptions.SecretKey!);

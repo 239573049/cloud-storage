@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using CloudStorage.Domain.Shared;
+using MessagePack;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using Volo.Abp;
@@ -24,12 +25,13 @@ public class CloudStorageHttpApiModule : AbpModule
         {
             Directory.CreateDirectory(Constants.CloudStorageRoot);
         }
-        
+
         ConfigureAuthentication(context, context.Services.GetConfiguration());
         ConfigureCors(context, context.Services.GetConfiguration());
         await ConfigureRedis(context);
         ConfigureSwaggerServices(context);
         ConfigurationMvc(context);
+        ConfigureSignalr(context.Services);
     }
 
     private void ConfigurationMvc(ServiceConfigurationContext context)
@@ -47,6 +49,22 @@ public class CloudStorageHttpApiModule : AbpModule
             });
     }
 
+    private void ConfigureSignalr(IServiceCollection services)
+    {
+        services
+            .AddSignalR(x =>
+            {
+                x.StreamBufferCapacity = (64 * 1024);
+            })
+            .AddRedis(services.GetConfiguration()["Redis:Configuration"])
+            .AddJsonProtocol()
+            .AddMessagePackProtocol(x =>
+            {
+                x.SerializerOptions = MessagePackSerializerOptions.Standard
+                    .WithSecurity(MessagePackSecurity.UntrustedData);
+            });
+    }
+
     private static void ConfigureSwaggerServices(ServiceConfigurationContext context)
     {
         context.Services.AddSwaggerDocument(config =>
@@ -57,54 +75,17 @@ public class CloudStorageHttpApiModule : AbpModule
                 document.Info.Title = "Cloud Api";
                 document.Info.Description = "云盘api";
             };
-            
+
             config.OperationProcessors.Add(new OperationSecurityScopeProcessor("cloud-storage"));
-            config.DocumentProcessors.Add(new SecurityDefinitionAppender("cloud-storage", new NSwag.OpenApiSecurityScheme
-            {
-                Name = "Authorization",
-                Description = "Bearer Token",
-                In = OpenApiSecurityApiKeyLocation.Header,
-                Type = OpenApiSecuritySchemeType.ApiKey
-            }));
+            config.DocumentProcessors.Add(new SecurityDefinitionAppender("cloud-storage",
+                new NSwag.OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Description = "Bearer Token",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Type = OpenApiSecuritySchemeType.ApiKey
+                }));
         });
-        
-        //
-        // context.Services.AddSwaggerGen(o =>
-        // {
-        //     string[] files = Directory.GetFiles(AppContext.BaseDirectory, "*.xml");//获取api文档
-        //     string[] array = files;
-        //     foreach(string filePath in array)
-        //     {
-        //         o.IncludeXmlComments(filePath, includeControllerXmlComments: true);
-        //     }
-        //     o.SwaggerDoc("v1", new OpenApiInfo
-        //     {
-        //         Title = "token API",
-        //         Version = "v1"
-        //     });
-        //     o.DocInclusionPredicate((docName, description) => true);
-        //     o.CustomSchemaIds(type => type.FullName);
-        //     o.AddSecurityRequirement(new OpenApiSecurityRequirement
-        //     {
-        //         {
-        //             new OpenApiSecurityScheme
-        //             {
-        //                 Reference = new OpenApiReference
-        //                 {
-        //                     Id = "Bearer", Type = ReferenceType.SecurityScheme
-        //                 }
-        //             },
-        //             Array.Empty<string>()
-        //         }
-        //     });
-        //     o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-        //     {
-        //         Description = "请输入文字“Bearer”，后跟空格和JWT值，格式  : Bearer {token}",
-        //         Name = "Authorization",
-        //         In = ParameterLocation.Header,
-        //         Type = SecuritySchemeType.ApiKey
-        //     });
-        // });
     }
 
     private static async Task ConfigureRedis(ServiceConfigurationContext context)
@@ -116,10 +97,9 @@ public class CloudStorageHttpApiModule : AbpModule
 
     private void ConfigureAuthentication(ServiceConfigurationContext context, IConfiguration configuration)
     {
-
         var configurationSection = configuration.GetSection(nameof(TokenOptions));
         var tokenOptions = configurationSection.Get<TokenOptions>();
-        if(string.IsNullOrEmpty(tokenOptions.Issuer))
+        if (string.IsNullOrEmpty(tokenOptions.Issuer))
             throw new Exception("未设置JWT权限配置");
         context.Services.Configure<TokenOptions>(configurationSection);
         context.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -127,12 +107,12 @@ public class CloudStorageHttpApiModule : AbpModule
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = true,                //是否在令牌期间验证签发者
-                    ValidateAudience = true,              //是否验证接收者
-                    ValidateLifetime = true,              //是否验证失效时间
-                    ValidateIssuerSigningKey = true,      //是否验证签名
-                    ValidAudience = tokenOptions.Audience,//接收者
-                    ValidIssuer = tokenOptions.Issuer,    //签发者，签发的Token的人
+                    ValidateIssuer = true, //是否在令牌期间验证签发者
+                    ValidateAudience = true, //是否验证接收者
+                    ValidateLifetime = true, //是否验证失效时间
+                    ValidateIssuerSigningKey = true, //是否验证签名
+                    ValidAudience = tokenOptions.Audience, //接收者
+                    ValidIssuer = tokenOptions.Issuer, //签发者，签发的Token的人
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.SecretKey!))
                 };
                 options.Events = new JwtBearerEvents
@@ -142,10 +122,11 @@ public class CloudStorageHttpApiModule : AbpModule
                         // 添加signalr的token 因为signalr的token在请求头上所以需要设置
                         var accessToken = context.Request.Query["access_token"];
                         var path = context.HttpContext.Request.Path;
-                        if(!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments(SignalRConstants.Token))
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments(SignalRConstants.FileStream))
                         {
                             context.Token = accessToken;
                         }
+
                         return Task.CompletedTask;
                     }
                 };
@@ -169,7 +150,7 @@ public class CloudStorageHttpApiModule : AbpModule
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
 
-        if(env.IsDevelopment())
+        if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
             app.UseOpenApi();
@@ -179,10 +160,9 @@ public class CloudStorageHttpApiModule : AbpModule
         app.UseCorrelationId();
 
         app.UseRouting();
-        app.UseCors("CorsPolicy");//CORS strategy
+        app.UseCors("CorsPolicy"); //CORS strategy
         app.UseAuditing();
 
         app.UseAuthentication();
-
     }
 }
