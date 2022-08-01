@@ -62,6 +62,8 @@ public class FileStreamHub : Hub
         var user = await _userInfoRepository.FirstOrDefaultAsync(x => x.Id == userId);
 
         var number =await RedisHelper.GetAsync<long>(user.ToString());
+        
+        // TODO 限制用户下载线程
         if (number > _fileStreamOptions.DownloadNumber)
         {
             _logger.LogError("上传文件异常，上传用户ID：{0},上传数量达到上线；", userId);
