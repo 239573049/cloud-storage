@@ -9,6 +9,7 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
 using Volo.Abp.Modularity;
+using FileStreamOptions = CloudStorage.Domain.Shared.Options.FileStreamOptions;
 
 namespace token;
 
@@ -37,7 +38,18 @@ public class CloudStorageHttpApiModule : AbpModule
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         ConfigConsul(context, context.Services.GetConfiguration());
+        ConfigureFileStreamOptions(context.Services);
         context.Services.AddHealthChecks();
+    }
+
+    /// <summary>
+    /// FileStream配置
+    /// </summary>
+    /// <param name="services"></param>
+    private void ConfigureFileStreamOptions(IServiceCollection services)
+    {
+        var configurationSection = services.GetConfiguration().GetSection(FileStreamOptions.Name);
+        services.Configure<FileStreamOptions>(configurationSection);
     }
 
     /// <summary>

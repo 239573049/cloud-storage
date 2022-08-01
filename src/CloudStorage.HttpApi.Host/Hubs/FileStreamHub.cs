@@ -7,11 +7,13 @@ using CloudStorage.Domain.Shared;
 using CloudStorage.Domain.Shared.Events;
 using CloudStorage.Domain.Users;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using token.Hubs.Views;
 using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.EventBus.Distributed;
+using FileStreamOptions = CloudStorage.Domain.Shared.Options.FileStreamOptions;
 
 namespace token.Hubs;
 
@@ -25,16 +27,17 @@ public class FileStreamHub : Hub
     private readonly IDistributedEventBus _distributedEventBus;
     private readonly ILogger<FileStreamHub> _logger;
     private readonly FileHelper _fileHelper;
-
+    private readonly FileStreamOptions _fileStreamOptions;
     /// <inheritdoc />
     public FileStreamHub(IStorageRepository storageRepository, IUserInfoRepository userInfoRepository,
-        FileHelper fileHelper, ILogger<FileStreamHub> logger, IDistributedEventBus distributedEventBus)
+        FileHelper fileHelper, ILogger<FileStreamHub> logger, IDistributedEventBus distributedEventBus, IOptions<FileStreamOptions> fileStreamOptions)
     {
         _storageRepository = storageRepository;
         _userInfoRepository = userInfoRepository;
         _fileHelper = fileHelper;
         _logger = logger;
         _distributedEventBus = distributedEventBus;
+        _fileStreamOptions = fileStreamOptions.Value;
     }
 
     public override async Task OnConnectedAsync()
@@ -51,12 +54,21 @@ public class FileStreamHub : Hub
     /// 文件存储
     /// </summary>
     /// <returns></returns>
-    public async Task FileStreamSaveAsync(ChannelReader<byte[]> stream,string json)
+    public async Task FileStreamSaveAsync(ChannelReader<byte[]> stream, string json)
     {
         var file = JsonConvert.DeserializeObject<FileStreamView>(json);
         var userId = Guid.Parse(GetUserId());
 
-        var user =await _userInfoRepository.FirstOrDefaultAsync(x=>x.Id==userId);
+        var user = await _userInfoRepository.FirstOrDefaultAsync(x => x.Id == userId);
+
+        var number =await RedisHelper.GetAsync<long>(user.ToString());
+        if (number > _fileStreamOptions.DownloadNumber)
+        {
+            _logger.LogError("上传文件异常，上传用户ID：{0},上传数量达到上线；", userId);
+            return;
+        }
+        
+        await RedisHelper.IncrByAsync(user.ToString(), 1);
 
         var fileName = Guid.NewGuid().ToString("N") + file.FileName;
 
@@ -73,9 +85,9 @@ public class FileStreamHub : Hub
             Type = StorageType.File,
             StoragePath = Path.Combine(path, fileName)
         };
-        
-        await _storageRepository.InsertAsync(data,true);
-        
+
+        await _storageRepository.InsertAsync(data, true);
+
         try
         {
             while (await stream.WaitToReadAsync())
@@ -95,10 +107,9 @@ public class FileStreamHub : Hub
         finally
         {
             fileStream.Close();
+            await RedisHelper.IncrByAsync(user.ToString(), -1);
         }
 
-
-        
         // 发布上传文件事件处理
         await _distributedEventBus.PublishAsync(new UserStorageEto(userId));
     }
@@ -111,7 +122,8 @@ public class FileStreamHub : Hub
 
     private UserInfo? GetUser()
     {
-        var json = Context.User?.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == Constants.User)?.Value ??
+        var json = Context.User?.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == Constants.User)
+                       ?.Value ??
                    throw new Exception("未登录");
 
         return JsonConvert.DeserializeObject<UserInfo>(json);
