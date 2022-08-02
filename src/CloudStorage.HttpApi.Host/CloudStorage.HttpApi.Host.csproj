@@ -58,6 +58,11 @@
     <ItemGroup>
       <Folder Include="wwwroot" />
       <Folder Include="wwwroot\CloudStorage" />
+      <Folder Include="wwwroot\CloudStorage\ac4dedfa1ebe4c3a9bfcbfdd65d1f3d2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="wwwroot\CloudStorage\ac4dedfa1ebe4c3a9bfcbfdd65d1f3d2\a8bf83160a274c3aa814b0f58a61dac6ubuntu-22.04-desktop-amd64.iso" />
     </ItemGroup>
 
 </Project>

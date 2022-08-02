@@ -17,4 +17,11 @@ public interface IStorageRepository : IRepository<Storage,Guid>
     /// <param name="userId"></param>
     /// <returns></returns>
     Task<long?> GetUseLengthAsync(Guid userId);
+
+    /// <summary>
+    /// 创建
+    /// </summary>
+    /// <param name="storage"></param>
+    /// <returns></returns>
+    Task CreateAsync(Storage storage);
 }

@@ -1,3 +1,4 @@
+using CloudStorage.Domain.Shared;
 using CloudStorage.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.DependencyInjection;
@@ -7,7 +8,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace CloudStorage.EntityFrameworkCore.Users;
 
 /// <inheritdoc />
-public class UserInfoRepository : EfCoreRepository<CloudStorageDbContext, UserInfo, Guid>, IUserInfoRepository ,ITransientDependency
+public class UserInfoRepository : EfCoreRepository<CloudStorageDbContext, UserInfo, Guid>, IUserInfoRepository,
+    ITransientDependency
 {
     /// <inheritdoc />
     public UserInfoRepository(IDbContextProvider<CloudStorageDbContext> dbContextProvider) : base(dbContextProvider)
@@ -19,12 +21,16 @@ public class UserInfoRepository : EfCoreRepository<CloudStorageDbContext, UserIn
     {
         var dbContext = await GetDbContextAsync();
 
+        var usedSize = await dbContext.Storage
+            .Where(x => x.UserInfoId == id && x.Type == StorageType.File && x.Length != null)
+            .SumAsync(x => x.Length);
+
         // TODO 获取用户的基本信息包括云盘剩余大小
         var query =
             from userInfo in dbContext.UserInfo
             join userStorage in dbContext.UserStorages on userInfo.Id equals userStorage.UserId
             where userInfo.Id == id
-            select new UserInfoView(userInfo.Id,userStorage.TotalSize,userStorage.UsedSize)
+            select new UserInfoView(userInfo.Id, userStorage.TotalSize, userStorage.UsedSize)
             {
                 Account = userInfo.Account,
                 BriefIntroduction = userInfo.BriefIntroduction,
@@ -32,10 +38,14 @@ public class UserInfoRepository : EfCoreRepository<CloudStorageDbContext, UserIn
                 Name = userInfo.Name,
                 Sex = userInfo.Sex,
                 WeChatOpenId = userInfo.WeChatOpenId,
-                Status =userInfo.Status,
+                Status = userInfo.Status,
                 Password = userInfo.Password,
             };
 
-        return await query.FirstOrDefaultAsync();
+        var result = await query.FirstOrDefaultAsync();
+
+        result.UsedSize = usedSize ?? 0;
+        
+        return result;
     }
 }

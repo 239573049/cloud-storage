@@ -1,18 +1,13 @@
-using System.Security.Principal;
 using System.Threading.Channels;
-using CloudStorage.Application.Contracts.Users.Views;
 using CloudStorage.Application.Helpers;
 using CloudStorage.Domain.CloudStorages;
 using CloudStorage.Domain.Shared;
-using CloudStorage.Domain.Shared.Events;
 using CloudStorage.Domain.Users;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using token.Hubs.Views;
-using Volo.Abp;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.EventBus.Distributed;
 using FileStreamOptions = CloudStorage.Domain.Shared.Options.FileStreamOptions;
 
 namespace token.Hubs;
@@ -24,19 +19,18 @@ public class FileStreamHub : Hub
 {
     private readonly IStorageRepository _storageRepository;
     private readonly IUserInfoRepository _userInfoRepository;
-    private readonly IDistributedEventBus _distributedEventBus;
     private readonly ILogger<FileStreamHub> _logger;
     private readonly FileHelper _fileHelper;
     private readonly FileStreamOptions _fileStreamOptions;
+
     /// <inheritdoc />
     public FileStreamHub(IStorageRepository storageRepository, IUserInfoRepository userInfoRepository,
-        FileHelper fileHelper, ILogger<FileStreamHub> logger, IDistributedEventBus distributedEventBus, IOptions<FileStreamOptions> fileStreamOptions)
+        FileHelper fileHelper, ILogger<FileStreamHub> logger, IOptions<FileStreamOptions> fileStreamOptions)
     {
         _storageRepository = storageRepository;
         _userInfoRepository = userInfoRepository;
         _fileHelper = fileHelper;
         _logger = logger;
-        _distributedEventBus = distributedEventBus;
         _fileStreamOptions = fileStreamOptions.Value;
     }
 
@@ -61,15 +55,15 @@ public class FileStreamHub : Hub
 
         var user = await _userInfoRepository.FirstOrDefaultAsync(x => x.Id == userId);
 
-        var number =await RedisHelper.GetAsync<long>(user.ToString());
-        
-        // TODO 限制用户下载线程
+        var number = await RedisHelper.GetAsync<long>(user.ToString());
+
+        // TODO 限制用户上传线程
         if (number > _fileStreamOptions.DownloadNumber)
         {
             _logger.LogError("上传文件异常，上传用户ID：{0},上传数量达到上线；", userId);
             return;
         }
-        
+
         await RedisHelper.IncrByAsync(user.ToString(), 1);
 
         var fileName = Guid.NewGuid().ToString("N") + file.FileName;
@@ -88,7 +82,6 @@ public class FileStreamHub : Hub
             StoragePath = Path.Combine(path, fileName)
         };
 
-        await _storageRepository.InsertAsync(data, true);
 
         try
         {
@@ -112,8 +105,7 @@ public class FileStreamHub : Hub
             await RedisHelper.IncrByAsync(user.ToString(), -1);
         }
 
-        // 发布上传文件事件处理
-        await _distributedEventBus.PublishAsync(new UserStorageEto(userId));
+        await _storageRepository.InsertAsync(data,true);
     }
 
     private string GetUserId()

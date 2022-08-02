@@ -23,4 +23,8 @@
       <ProjectReference Include="..\CloudStorage.EntityFrameworkCore\CloudStorage.EntityFrameworkCore.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Events" />
+    </ItemGroup>
+
 </Project>

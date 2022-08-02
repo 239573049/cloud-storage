@@ -4,7 +4,6 @@ using CloudStorage.Application.Contracts.Helper;
 using CloudStorage.Application.Helpers;
 using CloudStorage.Domain.CloudStorages;
 using CloudStorage.Domain.Shared;
-using CloudStorage.Domain.Shared.Events;
 using CloudStorage.Domain.Users;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -70,9 +69,6 @@ public class StorageService : ApplicationService, IStorageService
         data = await _storageRepository.InsertAsync(data, true);
 
         await _fileHelper.SaveFileAsync(input.Bytes, path, fileName);
-
-        // 发布上传文件事件处理
-        await _distributedEventBus.PublishAsync(new UserStorageEto(userId));
         
         return ObjectMapper.Map<Storage, StorageDto>(data);
     }
@@ -112,8 +108,6 @@ public class StorageService : ApplicationService, IStorageService
             await _fileHelper.SaveFileAsync(file.Bytes, path, fileName);
         }
         
-        // 发布上传文件事件处理
-        await _distributedEventBus.PublishAsync(new UserStorageEto( userId));
     }
 
     /// <inheritdoc />
@@ -239,10 +233,7 @@ public class StorageService : ApplicationService, IStorageService
             await _storageRepository.DeleteManyAsync(storage);
         }
 
-        await _storageRepository.DeleteAsync(x=>x.Id ==id);
-        
-        // 发布上传文件事件处理
-        await _distributedEventBus.PublishAsync(new UserStorageEto(_principalAccessor.UserId()));
+        await _storageRepository.DeleteAsync(x=>x.Id ==id); 
     }
 
     /// <inheritdoc />
