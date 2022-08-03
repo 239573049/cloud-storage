@@ -54,7 +54,9 @@ public class CloudStorageHttpApiModule : AbpModule
         services
             .AddSignalR(x =>
             {
+                // 传输缓存
                 x.StreamBufferCapacity = (64 * 1024);
+                x.MaximumReceiveMessageSize = (64 * 1024);
             })
             .AddRedis(services.GetConfiguration()["Redis:Configuration"])
             .AddJsonProtocol()

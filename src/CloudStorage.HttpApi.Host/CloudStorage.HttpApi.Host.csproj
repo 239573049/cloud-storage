@@ -58,7 +58,6 @@
     <ItemGroup>
       <Folder Include="wwwroot" />
       <Folder Include="wwwroot\CloudStorage" />
-      <Folder Include="wwwroot\CloudStorage\ac4dedfa1ebe4c3a9bfcbfdd65d1f3d2" />
     </ItemGroup>
 
     <ItemGroup>

@@ -64,7 +64,7 @@ public class FileStreamHub : Hub
             return;
         }
 
-        await RedisHelper.IncrByAsync(user.ToString(), 1);
+        await RedisHelper.IncrByAsync(userId.ToString(), 1);
 
         var fileName = Guid.NewGuid().ToString("N") + file.FileName;
 
@@ -90,6 +90,7 @@ public class FileStreamHub : Hub
                 while (stream.TryRead(out var bytes))
                 {
                     await fileStream.WriteAsync(bytes);
+                    _ = Clients.Client(Context.ConnectionId).SendAsync("file", true);
                 }
             }
         }
@@ -102,10 +103,10 @@ public class FileStreamHub : Hub
         finally
         {
             fileStream.Close();
-            await RedisHelper.IncrByAsync(user.ToString(), -1);
+            await RedisHelper.IncrByAsync(userId.ToString(), -1);
         }
 
-        await _storageRepository.InsertAsync(data,true);
+        await _storageRepository.InsertAsync(data, true);
     }
 
     private string GetUserId()

@@ -29,7 +29,7 @@ builder.Host.AddAppSettingsSecretsJson()
     .UseAutofac()
     .UseSerilog();
 
-await builder.AddApplicationAsync<CloudStorageHttpApiModule>();
+await builder.AddApplicationAsync<CloudStorageHttpApiHostModule>();
 var app = builder.Build();
 await app.InitializeApplicationAsync();
 

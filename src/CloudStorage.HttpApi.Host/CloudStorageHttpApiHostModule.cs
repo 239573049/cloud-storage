@@ -17,13 +17,13 @@ namespace token;
 /// web
 /// </summary>
 [DependsOn(
-    typeof(CloudStorage.HttpApi.CloudStorageHttpApiModule),
+    typeof(CloudStorageHttpApiModule),
     typeof(AbpAutofacModule),
     typeof(CloudStorageApplicationModule),
     typeof(CloudStorageEntityFrameworkCoreModule),
     typeof(AbpAspNetCoreSerilogModule)
 )]
-public class CloudStorageHttpApiModule : AbpModule
+public class CloudStorageHttpApiHostModule : AbpModule
 {
     private void ConfigConsul(ServiceConfigurationContext context, IConfiguration configuration)
     {
