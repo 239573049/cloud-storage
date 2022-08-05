@@ -53,15 +53,21 @@ public class StorageDto : AggregateRoot<Guid>, IHasCreationTime
     /// 是否预览
     /// </summary>
     public bool Preview { get; set; } = false;
-    
+
     public DateTime CreationTime { get; set; }
 
     public void SetCloudUlr(string? cloudUrl)
     {
         if (CloudUrl == cloudUrl)
         {
+            if (FileNameSuffix.Video.Any(x => cloudUrl?.EndsWith(x) == true))
+            {
+                Preview = true;
+            }
+
             return;
         }
+
         CloudUrl = cloudUrl;
         Preview = true;
     }
