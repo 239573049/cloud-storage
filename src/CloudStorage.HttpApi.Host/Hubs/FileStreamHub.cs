@@ -3,6 +3,7 @@ using CloudStorage.Application.Helpers;
 using CloudStorage.Domain.CloudStorages;
 using CloudStorage.Domain.Shared;
 using CloudStorage.Domain.Users;
+using CloudStorage.HttpApi.HubBase;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -15,7 +16,7 @@ namespace token.Hubs;
 /// <summary>
 /// 文件上传服务Hub
 /// </summary>
-public class FileStreamHub : Hub
+public class FileStreamHub : HubBase
 {
     private readonly IStorageRepository _storageRepository;
     private readonly IUserInfoRepository _userInfoRepository;
@@ -48,6 +49,7 @@ public class FileStreamHub : Hub
     /// 文件存储
     /// </summary>
     /// <returns></returns>
+    [HubMethodName("FileStreamSave")]
     public async Task FileStreamSaveAsync(ChannelReader<byte[]> stream, string json)
     {
         var file = JsonConvert.DeserializeObject<FileStreamView>(json);
@@ -108,18 +110,4 @@ public class FileStreamHub : Hub
         await _storageRepository.InsertAsync(data, true);
     }
 
-    private string GetUserId()
-    {
-        return Context.User?.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == Constants.Id)?.Value ??
-               throw new Exception("未登录");
-    }
-
-    private UserInfo? GetUser()
-    {
-        var json = Context.User?.Identities.FirstOrDefault()?.Claims.FirstOrDefault(x => x.Type == Constants.User)
-                       ?.Value ??
-                   throw new Exception("未登录");
-
-        return JsonConvert.DeserializeObject<UserInfo>(json);
-    }
 }
