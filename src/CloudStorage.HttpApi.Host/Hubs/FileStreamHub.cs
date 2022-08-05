@@ -74,14 +74,13 @@ public class FileStreamHub : Hub
 
         var data = new Storage(Guid.NewGuid())
         {
-            Path = fileName,
+            Path = file.FileName,
             StorageId = file.StorageId,
             UserInfoId = userId,
             Length = file.Length,
             Type = StorageType.File,
             StoragePath = Path.Combine(path, fileName)
         };
-
 
         try
         {
